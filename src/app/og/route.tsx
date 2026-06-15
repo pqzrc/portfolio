@@ -1,20 +1,14 @@
 import { ImageResponse } from 'next/og'
-import { baseURL } from '@/app/resources';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function GET(request: Request) {
     const url = new URL(request.url)
     const title = url.searchParams.get('title') || 'Portfolio'
-    const font = fetch(
-        new URL('../../../public/fonts/Inter.ttf', import.meta.url)
-    ).then((res) => res.arrayBuffer());
-    const fontData = await font;
 
     const person = {
         name: 'Rénald DESIRE',
         role: 'Développeur Full Stack',
-        avatar: '/images/avatar.JPEG'
     };
 
     return new ImageResponse(
@@ -53,16 +47,21 @@ export async function GET(request: Request) {
                             alignItems: 'center',
                             gap: '5rem'
                         }}>
-                        {/* eslint-disable-next-line @next/next/no-img-element -- next/image is not supported inside ImageResponse. */}
-                        <img
-                            src={'https://' + baseURL + person.avatar}
-                            alt=""
+                        <div
                             style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
                                 width: '12rem',
                                 height: '12rem',
-                                objectFit: 'cover',
                                 borderRadius: '100%',
-                            }}/>
+                                background: '#34d399',
+                                color: '#06130d',
+                                fontSize: '4rem',
+                                fontWeight: 800,
+                            }}>
+                            RD
+                        </div>
                         <div
                             style={{
                                 display: 'flex',
@@ -96,13 +95,6 @@ export async function GET(request: Request) {
         {
             width: 1920,
             height: 1080,
-            fonts: [
-                {
-                    name: 'Inter',
-                    data: fontData,
-                    style: 'normal',
-                },
-              ],
         }
     )
 }
