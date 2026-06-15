@@ -7,9 +7,9 @@ import { formatDate } from '@/app/utils/formatDate';
 import ScrollToHash from '@/components/ScrollToHash';
 
 interface PostParams {
-    params: {
+    params: Promise<{
         slug: string;
-    };
+    }>;
 }
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
@@ -19,20 +19,21 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
     }));
 }
 
-export function generateMetadata({ params: { slug } }: PostParams) {
-	let post = getPosts(['src', 'app', 'blog', 'posts', 'fr']).find((post) => post.slug === slug)
+export async function generateMetadata({ params }: PostParams) {
+	const { slug } = await params;
+	const post = getPosts(['src', 'app', 'blog', 'posts', 'fr']).find((post) => post.slug === slug)
 	
 	if (!post) {
 		return
 	}
 
-	let {
+	const {
 		title,
 		publishedAt: publishedTime,
 		summary: description,
 		image,
 	} = post.metadata
-	let ogImage = image
+	const ogImage = image
 		? `https://${baseURL}${image}`
 		: `https://${baseURL}/og?title=${title}`;
 
@@ -60,8 +61,9 @@ export function generateMetadata({ params: { slug } }: PostParams) {
 	}
 }
 
-export default function PostPage({ params }: PostParams) {
-	let post = getPosts(['src', 'app', 'blog', 'posts', 'fr']).find((post) => post.slug === params.slug)
+export default async function PostPage({ params }: PostParams) {
+	const { slug } = await params;
+	const post = getPosts(['src', 'app', 'blog', 'posts', 'fr']).find((post) => post.slug === slug)
 
 	if (!post) {
 		notFound()

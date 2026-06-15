@@ -1,101 +1,83 @@
 ---
 title: "Optimiser des applications"
-subtitle: "Algorithmes de pathfinding dans un labyrinthe Python"
-publishedAt: "2024-01-16"
-summary: "Développer, comparer et optimiser trois algorithmes de recherche de chemin : Dijkstra, A* et BFS"
-image: "/images/projects/project-02/calc.png"
+subtitle: "Niveau 3 - compétence 2"
+publishedAt: "2026-06-10"
+summary: "Compétence de niveau 3 illustrée par Organisation et Méthode, application métier utilisée dans un contexte d'entreprise."
 ---
 
 # Optimiser des applications
 
-## Niveau 1 - Appréhender et construire des algorithmes
+## Niveau 3 - Améliorer une application selon des critères mesurables
 
-### Analyser un problème avec méthode de découpage en éléments algorithmiques simples
+### AC32.01 - Anticiper les résultats de diverses métriques
 
-**Description :** Décomposer un problème complexe en sous-problèmes algorithmiques simples et identifier les structures de données appropriées.
+**Description :** Prévoir l'impact d'une fonctionnalité sur le temps de réponse, le volume de données et le nombre de traitements.
 
-**Ce que j'ai fait dans les Algorithmes de Labyrinthe :**
-- Analysé le problème de pathfinding en sous-problèmes : représentation du labyrinthe, exploration des nœuds, calcul des distances
-- Identifié les structures nécessaires : matrices 2D pour le labyrinthe, listes pour les chemins, files de priorité pour l'exploration
-- Décomposé l'algorithme en étapes : initialisation, exploration des voisins, calcul de coût, reconstruction du chemin
-- Modélisé les données avec des structures optimisées (graphes, coordonnées x/y, états visités)
-- Créé des algorithmes de parsing pour lire les fichiers de labyrinthe
+**Contexte et rôle :** Sur Organisation et Méthode, plusieurs pages manipulent des utilisateurs, tâches, documents, rapports et permissions. Mon rôle était d'ajouter des fonctionnalités sans ralentir l'usage quotidien.
 
-**Technologies utilisées :** Python, structures de données (listes, dictionnaires, sets), matrices NumPy, algorithmes de graphes
+**Ce que j'ai fait :**
+- Mise en place de pagination, filtres et chargements ciblés sur les listes.
+- Réduction des données retournées par certaines réponses API.
+- Analyse des relations Eloquent avant d'ajouter des jointures ou chargements imbriqués.
 
-### Comparer des algorithmes pour des problèmes classiques
+**Difficultés et solutions :**
+- Charger trop de relations rend les pages lentes: j'ai limité les données aux besoins réels de l'écran.
+- Une métrique technique ne suffit pas: j'ai relié les choix aux usages métier.
 
-**Description :** Évaluer et comparer différents algorithmes de tri, recherche et optimisation selon leurs performances.
+**Technologies utilisées :** Laravel, Eloquent, MySQL, API, pagination, filtres.
 
-**Ce que j'ai fait dans les Algorithmes de Labyrinthe :**
-- Comparé trois algorithmes : Dijkstra (optimal mais lent), A* (optimal et rapide), BFS (non-optimal mais simple)
-- Mesuré les performances : temps d'exécution, nombre de nœuds explorés, longueur du chemin trouvé
-- Testé sur différentes tailles de labyrinthes (10x10, 50x50, 100x100) pour analyser la scalabilité
-- Analysé la complexité temporelle et spatiale : O(V log V) pour Dijkstra, O(b^d) pour BFS
-- Créé des graphiques comparatifs des performances avec matplotlib
+**Ce que j'en retire :** Optimiser commence avant le bug de performance: il faut anticiper les volumes, les accès et les parcours utilisateurs.
 
-**Technologies utilisées :** Python avec module time, matplotlib pour les graphiques, benchmarking
+**Image :** /images/projects/organisation-et-methode/page-edit-rapport.png
 
-### Formaliser et mettre en œuvre des outils mathématiques pour l'informatique
+### AC32.02 - Profiler, analyser et justifier le comportement d'un code existant
 
-**Description :** Appliquer des concepts mathématiques (statistiques, algèbre linéaire, probabilités) dans le développement informatique.
+**Description :** Comprendre pourquoi un code se comporte d'une certaine manière avant de le modifier.
 
-**Ce que j'ai fait dans les Algorithmes de Labyrinthe :**
-- Utilisé la distance euclidienne et Manhattan pour les heuristiques d'A*
-- Appliqué des calculs de plus court chemin avec l'algorithme de Dijkstra
-- Implémenté des fonctions de coût et d'heuristique mathématiques
-- Utilisé des concepts de théorie des graphes (voisinage, connectivité)
-- Calculé des statistiques sur les performances (moyenne, médiane, écart-type)
+**Contexte et rôle :** Ma tutrice m'a fourni plusieurs extraits de code issus d'un autre projet BeepWay, notamment un middleware d'authentification et un helper de gestion d'erreurs. Avant de les intégrer dans Organisation et Méthode, je devais comprendre précisément leur comportement: validation du token, expiration, exception du super utilisateur, réponse JSON d'erreur et journalisation.
 
-**Technologies utilisées :**  théorie des graphes, NumPy, Python
+**Ce que j'ai fait :**
+- Analyse du flux du middleware `EnsureTokenIsValid`: lecture du header `token`, recherche en base et retour `401` si le token est absent ou introuvable.
+- Étude de la règle d'expiration: comparaison entre la date actuelle et `date_authentification`, avec une durée de validité de 15 minutes.
+- Identification du cas particulier du client `SUPER`, qui ne suit pas la règle d'expiration classique.
+- Compréhension du mécanisme de mise à jour du super token à partir de la table de paramètres.
+- Analyse du helper `ErrorHelper`, utilisé par le middleware pour transformer un `errorCode` en message métier et réponse JSON standardisée.
+- Suivi du flux complet d'erreur: token invalide ou expiré -> création d'un `ErrorHelper` -> réponse HTTP avec `statusCode`, `message`, `description`, `errorCode` et `error`.
+- Analyse de la journalisation après exécution de la requête: statut `OK`/`KO`, utilisateur, requête, réponse et erreurs.
+- Adaptation de cette logique avant intégration pour respecter les modèles, tables, codes d'erreur et besoins d'Organisation et Méthode.
 
-## Niveau 2 - Sélectionner les algorithmes adéquats pour répondre à un problème donné
+**Difficultés et solutions :**
+- Le code ne se limitait pas à vérifier un token: il modifiait aussi certaines données, générait des réponses d'erreur et enregistrait des logs après la réponse.
+- Pour éviter une régression, j'ai séparé les responsabilités à comprendre: authentification, expiration, super utilisateur, mapping des erreurs, réponse JSON et logs.
 
-### Choisir des structures de données complexes adaptées au problème
+**Technologies utilisées :** Laravel Middleware, PHP, Eloquent, MySQL, logs, tokens API, réponses HTTP.
 
-**Description :** Sélectionner et implémenter des structures de données avancées pour optimiser les performances.
+**Ce que j'en retire :** Analyser un code existant demande de suivre le comportement complet, pas seulement la fonction principale. Ici, j'ai dû comprendre les effets sur la base de données, les règles métier, les réponses HTTP et les logs avant de pouvoir réutiliser le code proprement.
 
-**Ce que j'ai fait dans le ChatBot AI avec Ollama :**
-- Implémenté un système de gestion des contextes LLM avec historique conversationnel optimisé
-- Créé des structures de données pour gérer les prompts avec template et injection de variables
-- Utilisé des queues thread-safe pour gérer les flux audio en temps réel sans blocage
-- Optimisé le stockage des embeddings et tokens pour réduire la latence du LLM
-- Implémenté un cache intelligent pour les réponses fréquentes du chatbot
-- Géré des buffers circulaires pour l'audio streaming continu
+**Image :** /images/projects/organisation-et-methode/token-middleware-code.png
+**Image :** /images/projects/organisation-et-methode/error-helper-code.png
 
-**Technologies utilisées :** Python, threading, queues, structures de données optimisées, cache management
+### AC32.03 - Choisir et utiliser des bibliothèques et méthodes dédiées
 
-### Utiliser des technologies algorithmiques adaptées pour des problèmes complexes
+**Description :** Utiliser les bons outils pour améliorer la qualité, la sécurité et la maintenabilité d'une application.
 
-**Description :** Implémenter des algorithmes avancés comme l'IA, la recherche opérationnelle et l'optimisation globale.
+**Contexte et rôle :** Dans Organisation et Méthode, je devais gérer deux besoins précis: la rédaction structurée du contenu des tâches et la génération de rapports PDF lisibles et exploitables par l'entreprise.
 
-**Problématique :** Comment faire qu'un LLM généraliste réponde précisément sur l'IUT de la Martinique sans halluciner d'informations ?
+**Ce que j'ai fait :**
+- Utilisation d'Editor.js pour la rédaction riche du contenu des tâches avec des blocs structurés.
+- Utilisation de `bumpcore/editor.php` pour valider, normaliser et transformer le contenu Editor.js côté backend.
+- Utilisation de DomPDF pour générer des exports PDF à partir d'un HTML dédié au rendu d'un rapport.
+- Séparation entre la rédaction des tâches, le rendu HTML et l'export PDF afin d'éviter de mélanger les responsabilités.
 
-**Solution RAG (Retrieval-Augmented Generation) :**
-Le RAG combine deux technologies complémentaires :
-- **Recherche sémantique** pour trouver l'information pertinente dans une base de connaissances
-- **Génération de texte** pour formuler une réponse cohérente basée sur ces informations
+**Preuves visibles :**
+- `resources/js/editorjs.js` et `public/js/task/write-page.js` pour l'intégration d'Editor.js.
+- `app/Services/Tasks/TaskContentRenderer.php` pour la normalisation et le rendu du contenu structuré.
+- `app/Http/Controllers/RapportController.php` pour la génération PDF avec DomPDF.
+- `composer.json` pour `dompdf/dompdf` et `bumpcore/editor.php`.
+- `package.json` pour les dépendances `@editorjs/*`.
 
-**Ce que j'ai fait dans le ChatBot AI avec Ollama :**
-- Intégré des modèles de langage (LLM) locaux avec Ollama pour le traitement du langage naturel
-- Implémenté des algorithmes de Speech-to-Text pour la reconnaissance vocale en temps réel
-- Utilisé des réseaux de neurones pour la synthèse vocale avec l'API ElevenLabs
-- Optimisé les algorithmes de prompt engineering pour améliorer les réponses du LLM
-- Appliqué des techniques de machine learning pour la détection d'intention et le context switching
-- Développé des algorithmes de streaming audio avec réduction de bruit et normalisation
-- Implémenté l'architecture RAG pour éviter les hallucinations du modèle
+**Technologies utilisées :** Laravel, Editor.js, `bumpcore/editor.php`, DomPDF, JavaScript, PHP.
 
-**Technologies utilisées :** LLM (Large Language Models), Speech-to-Text AI, Neural TTS, prompt engineering, ML intent detection, audio processing algorithms, RAG architecture
+**Ce que j'en retire :** Choisir une bibliothèque dédiée, ce n'est pas ajouter de la complexité gratuitement: c'est utiliser un outil spécialisé quand il répond mieux au besoin qu'un développement maison.
 
-### Évaluer l'impact environnemental et sociétal des solutions proposées
-
-**Description :** Analyser les conséquences écologiques et sociales des algorithmes développés.
-
-**Ce que j'ai fait dans les Algorithmes de Labyrinthe :**
-- Mesuré la consommation CPU et mémoire de chaque algorithme avec des outils de profiling
-- Analysé l'impact énergétique : A* consomme moins d'énergie car plus rapide que Dijkstra
-- Documenté le trade-off entre précision et efficacité énergétique
-- Étudié l'applicabilité dans des contextes réels (GPS, robotique) et leur impact environnemental
-- Optimisé les algorithmes pour réduire l'empreinte carbone des calculs intensifs
-
-**Technologies utilisées :** Outils de profiling Python, métriques de performance, analyse d'impact énergétique  
+**Image :** /images/projects/organisation-et-methode/redaction-task.png

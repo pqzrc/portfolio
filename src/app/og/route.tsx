@@ -4,8 +4,8 @@ import { baseURL } from '@/app/resources';
 export const runtime = 'edge';
 
 export async function GET(request: Request) {
-    let url = new URL(request.url)
-    let title = url.searchParams.get('title') || 'Portfolio'
+    const url = new URL(request.url)
+    const title = url.searchParams.get('title') || 'Portfolio'
     const font = fetch(
         new URL('../../../public/fonts/Inter.ttf', import.meta.url)
     ).then((res) => res.arrayBuffer());
@@ -53,7 +53,10 @@ export async function GET(request: Request) {
                             alignItems: 'center',
                             gap: '5rem'
                         }}>
-                        <img src={'https://' + baseURL + person.avatar}
+                        {/* eslint-disable-next-line @next/next/no-img-element -- next/image is not supported inside ImageResponse. */}
+                        <img
+                            src={'https://' + baseURL + person.avatar}
+                            alt=""
                             style={{
                                 width: '12rem',
                                 height: '12rem',

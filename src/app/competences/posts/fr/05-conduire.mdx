@@ -1,104 +1,111 @@
 ---
 title: "Conduire un projet"
-subtitle: "Stage - Développement d'API Python en équipe"
-publishedAt: "2024-01-19"
-summary: "Organiser et piloter un projet de développement d'API en équipe avec Asana, Azure Cloud et GitHub"
-image: "/images/projects/project-04/avantage.png"
+subtitle: "Oral BUT 3 - besoins, faisabilité et suivi"
+publishedAt: "2026-06-10"
+summary: "Préparation orale de la compétence Conduire, illustrée par Organisation et Méthode et KovaaK's AI Personal Trainer."
 ---
 
 # Conduire un projet
 
-## Niveau 1 - Identifier les besoins métiers des clients et des utilisateurs
+## Niveau 2 - Appliquer une démarche de suivi selon les besoins métier
 
-### Appréhender les besoins du client et de l'utilisateur
+### AC25.01 - Identifier les processus présents dans une organisation
 
-**Description :** Dans la SAE Gestion de projet nous avons analysé les besoins d'une entreprise.
+**Description :** Comprendre comment fonctionne une organisation avant de transformer ses besoins en fonctionnalités.
 
-**Ce que j'ai fait dans le Stage API Python :**
-- Organisé des réunions avec les équipes métier pour comprendre leurs besoins en APIs de données
-- Créé des personas des utilisateurs finaux (développeurs internes, partenaires externes, applications mobiles)
-- Réalisé une analyse des systèmes existants et de leurs limitations de performance
-- Défini les user stories et critères d'acceptation avec les product owners
-- Établi une matrice de priorisation des endpoints API selon leur valeur business
+**Contexte et rôle :** Organisation et Méthode est né d'un besoin BeepWay: structurer l'organisation interne, centraliser les ressources et piloter les activités quotidiennes.
 
-**Technologies utilisées :**
+**Ce que j'ai fait :**
+- Analyse des processus liés aux utilisateurs, ressources, tâches, plannings, documents et rapports.
+- Repérage des acteurs, rôles et droits dans l'application.
+- Traduction des processus en modules fonctionnels.
 
-### Mettre en place les outils de gestion de projet
+**Difficultés et solutions :**
+- Les processus métier ne sont pas toujours formalisés: j'ai reformulé les besoins et observé les usages.
+- Certains modules sont liés entre eux: j'ai découpé les fonctionnalités en périmètres clairs.
 
-**Description :** 
+**Technologies utilisées :** Documentation fonctionnelle, Laravel, diagrammes de flux, suivi de tâches.
 
-**Ce que j'ai fait dans le Stage API Python :**
-- Configuré Asana pour la gestion des tâches avec workflow personnalisé (To Do, In Progress, Review, Done)
-- Utilisé GitHub Projects pour lier les issues de code aux tâches projet
-- Mis en place Azure DevOps pour l'intégration continue et le déploiement
-- Configuré Slack pour la communication d'équipe avec intégrations automatiques (GitHub, Asana)
-- Créé des dashboards de suivi avec métriques de développement (commits, pull requests, code coverage)
+**Ce que j'en retire :** Conduire un projet commence par comprendre l'organisation réelle, pas par écrire du code.
 
-**Technologies utilisées :** GitHub Projects, Google Workspace
+**Image :** /images/projects/organisation-et-methode/redaction-task.png
 
-### Identifier les acteurs et les différentes phases d'un cycle de développement
+### AC25.02 - Formaliser les besoins du client et de l'utilisateur
 
-**Description :**  
+**Description :** Transformer une demande métier en fonctionnalités, règles et critères vérifiables.
 
-**Ce que j'ai fait dans le Stage API Python :**
-- Identifié tous les stakeholders : équipes métier, architectes, développeurs, testeurs, ops
-- Défini les rôles : tech lead, développeurs senior/junior, testeur QA, DevOps engineer
-- Structuré le projet en sprints de 2 semaines avec livrables incrementaux
-- Planifié les phases : analyse des besoins, conception API, développement, tests, déploiement
-- Organisé les cérémonies : daily standups, sprint planning, code reviews, rétrospectives
+**Contexte et rôle :** Les retours BeepWay devaient être convertis en écrans, endpoints API, règles d'accès et comportements testables.
 
-**Technologies utilisées :** définition des rôles d'équipe
+**Ce que j'ai fait :**
+- Reformulation des besoins avant développement.
+- Découpage des demandes en tâches réalisables.
+- Ajustement des fonctionnalités après retours.
 
-## Niveau 2 - Appliquer une démarche de suivi de projet en fonction des besoins métiers des clients et des utilisateurs
+**Difficultés et solutions :**
+- Une demande orale peut manquer de détails techniques: j'ai posé les limites et validé des cas concrets.
+- Les priorités peuvent changer: j'ai gardé une démarche itérative.
 
-### Identifier les processus présents dans une organisation en vue d'améliorer les systèmes d'information
+**Technologies utilisées :** Laravel, API, documentation, tests de validation.
 
-**Description :** 
+**Ce que j'en retire :** Formaliser un besoin permet de réduire les malentendus et de livrer quelque chose de réellement utilisable.
 
-**Ce que j'ai fait dans le Stage API Python :**
-- Mappé les processus de récupération de données existants (extractions manuelles, rapports Excel)
-- Identifié les points de friction : temps de traitement long, erreurs humaines, données non synchronisées
-- Proposé l'automatisation via APIs : accès temps réel, standardisation des formats, élimination des tâches manuelles
-- Modélisé les nouveaux processus optimisés avec réduction de 80% du temps de traitement
+**Image :** /images/projects/organisation-et-methode/page-edit-rapport.png
 
+### AC25.03 - Identifier les critères de faisabilité d'un projet informatique
 
-**Technologies utilisées :** 
+**Description :** Évaluer ce qui est possible avec le temps, le code existant, les priorités et les contraintes de sécurité.
 
-### Formaliser les besoins du client et de l'utilisateur
+**Contexte et rôle :** Pendant le stage, les fonctionnalités devaient rester compatibles avec l'application existante et le temps disponible.
 
-**Description :** Transformer les besoins exprimés en spécifications techniques détaillées et documentées.
+**Ce que j'ai fait :**
+- Évaluation de l'impact technique avant de modifier un module.
+- Priorisation des fonctionnalités utiles à l'entreprise.
+- Prise en compte de la sécurité, des données et de la maintenance.
 
-**Ce que j'ai fait dans le Stage API Python :**
-- Rédigé les spécifications techniques des APIs avec documentation OpenAPI/Swagger
-- Défini les contrats d'interface : formats JSON, codes de retour HTTP, gestion d'erreurs
-- Spécifié les critères de performance : temps de réponse moins de 500ms, disponibilité 99.9%
-- Documenté les contraintes de sécurité : authentification OAuth2, chiffrement TLS, rate limiting
-- Créé des maquettes d'utilisation des APIs pour validation avec les équipes métier
+**Difficultés et solutions :**
+- Tout besoin n'est pas réalisable immédiatement: j'ai distingué l'essentiel des améliorations secondaires.
+- Certaines évolutions touchent plusieurs modules: j'ai vérifié les dépendances avant réalisation.
 
-**Technologies utilisées :** Documentation OpenAPI/Swagger, 
+**Technologies utilisées :** Analyse fonctionnelle, Laravel, MySQL, suivi de projet.
 
-### Identifier les critères de faisabilité d'un projet informatique
+**Ce que j'en retire :** La faisabilité est un compromis entre valeur métier, risque technique, temps et maintenabilité.
 
-**Description :** Évaluer la viabilité technique, économique et temporelle du projet.
+### AC25.04 - Définir et mettre en œuvre une démarche de suivi de projet
 
-**Ce que j'ai fait dans le Stage API Python :**
-- Analysé la faisabilité technique : évaluation des technologies Python (FastAPI, SQLAlchemy, PostgreSQL)
-- Évalué la faisabilité économique : budget infrastructure Azure vs bénéfices attendus
-- Estimé la faisabilité temporelle : 3 mois de développement avec équipe de 4 personnes
-- Identifié les risques : dépendances aux systèmes legacy, montée en charge, sécurité des données
-- Proposé des solutions de mitigation : architecture microservices, mise en cache, monitoring avancé
+**Description :** Suivre l'avancement, documenter les choix et rendre les livrables vérifiables.
 
-**Technologies utilisées :** 
+**Contexte et rôle :** Sur Organisation et Méthode, j'ai dû rendre compte de mon activité et faire évoluer l'application progressivement.
 
-### Définir et mettre en œuvre une démarche de suivi de projet
+**Ce que j'ai fait :**
+- Suivi régulier de l'avancement et des priorités.
+- Documentation des modules et de l'API.
+- Tests et vérifications avant livraison.
 
-**Description :** Implémenter un système de monitoring et de reporting pour assurer le pilotage du projet.
+**Difficultés et solutions :**
+- Sans suivi, les petites évolutions deviennent difficiles à justifier: j'ai conservé des preuves concrètes.
+- L'application était utilisée en production: j'ai privilégié des changements progressifs.
 
-**Ce que j'ai fait dans le Stage API Python :**
-- Mis en place des KPI de développement : vélocité d'équipe, code coverage, nombre de bugs
-- Organisé des stand-ups quotidiens et des revues de sprint avec reporting automatisé
-- Implémenté un système d'alertes pour les déviations de planning ou budget
-- Créé des tableaux de bord temps réel sur Azure DevOps pour suivre les déploiements
-- Défini des jalons de validation avec critères de passage : tests unitaires, tests d'intégration, performance
+**Technologies utilisées :** Documentation, Git, tests, Laravel, suivi de tâches.
 
-**Technologies utilisées :** 
+**Ce que j'en retire :** Un bon suivi donne de la visibilité au projet et sert de preuve lors de l'oral.
+
+### Illustration complémentaire - KovaaK's AI Personal Trainer
+
+**Description :** KovaaK's AI Personal Trainer illustre la conduite d'un projet personnel ambitieux, avec un périmètre technique clair et une évolution progressive.
+
+**Contexte et rôle :** J'ai cadré un assistant IA pour l'aim training, en partant d'un besoin utilisateur concret: analyser l'entraînement et proposer des exercices adaptés.
+
+**Ce que j'ai fait :**
+- Définition d'un MVP autour du chat IA, des exercices, des statistiques et de l'intégration KovaaK's.
+- Découpage du projet en services: front-end, backend, proxy, base de données, cache et LLM.
+- Rédaction d'un README et d'une architecture Docker pour faciliter le lancement et l'évolution.
+
+**Difficultés et solutions :**
+- Le périmètre pouvait devenir trop large: j'ai distingué les fonctionnalités réalisées et celles en préparation.
+- L'architecture multi-services demande de la discipline: j'ai documenté les rôles de chaque service.
+
+**Technologies utilisées :** Next.js, FastAPI, PostgreSQL, Redis, Docker Compose, Groq, Ollama.
+
+**Ce que j'en retire :** Conduire un projet personnel consiste à transformer une idée large en étapes livrables, justifiables et techniquement cohérentes.
+
+**Image :** /images/projects/kovaaks-ai-personal-trainer/cover.png

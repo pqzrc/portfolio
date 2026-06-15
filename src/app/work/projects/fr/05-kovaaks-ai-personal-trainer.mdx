@@ -1,0 +1,90 @@
+---
+title: "KovaaK's AI Personal Trainer"
+publishedAt: "2026-06-14"
+summary: "Assistant IA personnel pour l'entraînement aim training sur KovaaK's FPS Aim Trainer, avec chat, exercices, statistiques et intégration API."
+image: "/images/projects/kovaaks-ai-personal-trainer/home.png"
+status: "active"
+
+team:
+  - name: "Rénald DESIRE"
+    role: "Développeur"
+    avatar: "/images/avatar.JPEG"
+    linkedIn: "https://www.linkedin.com/company/once-ui/"
+
+images:
+  - "/images/projects/kovaaks-ai-personal-trainer/home.png"
+  - "/images/projects/kovaaks-ai-personal-trainer/document-uploader.png"
+  - "/images/projects/kovaaks-ai-personal-trainer/artifact-page.png"
+---
+
+<ImageGrid
+  images={[
+    {
+      width: 4,
+      height: 4,
+      alt: "Next.js",
+      src: "/images/skills/react.svg"
+    },
+    {
+      width: 4,
+      height: 4,
+      alt: "TypeScript",
+      src: "/images/skills/js.png"
+    },
+    {
+      width: 4,
+      height: 4,
+      alt: "Tailwind CSS",
+      src: "/images/skills/tailwind.png"
+    },
+    {
+      width: 4,
+      height: 4,
+      alt: "Python",
+      src: "/images/skills/python.png"
+    },
+    {
+      width: 4,
+      height: 4,
+      alt: "PostgreSQL",
+      src: "/images/skills/postgresql.svg"
+    },
+    {
+      width: 4,
+      height: 4,
+      alt: "Docker",
+      src: "/images/skills/docker.png"
+    }
+  ]}
+/>
+
+## Présentation
+
+KovaaK's AI Personal Trainer est un assistant IA personnel dédié à l'entraînement aim training sur KovaaK's FPS Aim Trainer. L'objectif est d'aider un joueur à comprendre ses statistiques, choisir des exercices adaptés et obtenir des recommandations d'entraînement dans une interface de chat.
+
+Le projet est structuré comme une application complète: un front-end Next.js avec TypeScript et Tailwind CSS, une API FastAPI en Python, une base PostgreSQL, un cache Redis, un proxy Node.js vers l'API KovaaK's et une architecture Docker pour lancer les services ensemble.
+
+## Fonctionnalités
+
+- Chat avec une IA spécialisée dans l'aim training.
+- Navigation entre le chat, les artefacts, l'uploader PDF, les statistiques et les paramètres.
+- Mode RAG hybride pour enrichir les réponses de l'IA avec des documents d'entraînement.
+- Upload de PDF avec métadonnées: titre, topics et niveau de sécurité.
+- Génération d'artefacts IA: programmes d'entraînement, plans d'exercices et rapports d'analyse.
+- Récupération de profils, statistiques et leaderboards via un proxy KovaaK's.
+- Cache Redis versionné pour limiter les appels et stabiliser les réponses.
+- Stockage PostgreSQL avec migrations Alembic.
+- Préparation d'analyses CSV, de recommandations personnalisées et d'un possible fine-tuning.
+
+## Architecture
+
+Le front-end communique avec le backend FastAPI. Le backend centralise la logique métier, interroge le proxy KovaaK's, stocke les données dans PostgreSQL et utilise Redis pour le cache. La couche LLM peut utiliser Groq pour les réponses rapides et Ollama en option pour une exécution locale.
+
+## Technologies utilisées
+
+- **Next.js 14 / TypeScript / Tailwind CSS**: interface de chat, onglets et écrans de suivi.
+- **FastAPI / Python**: API REST, services LLM, services KovaaK's et logique d'entraînement.
+- **PostgreSQL / Alembic**: persistance des conversations, exercices et statistiques.
+- **Redis**: cache versionné.
+- **Node.js**: proxy vers `kovaaks-api-client`.
+- **Docker Compose**: orchestration du front-end, backend, proxy, base de données et cache.

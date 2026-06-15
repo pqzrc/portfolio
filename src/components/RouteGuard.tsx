@@ -3,7 +3,11 @@
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { routes, protectedRoutes } from '@/app/resources';
-import { Flex, Spinner, Input, Button, Heading } from '@/once-ui/components';
+import { Button } from '@/once-ui/components/Button';
+import { Flex } from '@/once-ui/components/Flex';
+import { Heading } from '@/once-ui/components/Heading';
+import { Input } from '@/once-ui/components/Input';
+import { Spinner } from '@/once-ui/components/Spinner';
 
 interface RouteGuardProps {
     children: React.ReactNode;

@@ -3,9 +3,10 @@
 import { Flex, Heading, SmartImage, SmartLink, Tag, Text } from '@/once-ui/components';
 import styles from './Posts.module.scss';
 import { formatDate } from '@/app/utils/formatDate';
+import type { MdxPost } from '@/app/utils/utils';
 
 interface PostProps {
-    post: any;
+    post: MdxPost;
     thumbnail: boolean;
 }
 

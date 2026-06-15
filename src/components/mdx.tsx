@@ -1,5 +1,6 @@
 import { MDXRemote, MDXRemoteProps } from 'next-mdx-remote/rsc';
 import React, { ReactNode } from 'react';
+import type { MDXComponents } from 'mdx/types';
 import { SmartImage, SmartLink, Text } from '@/once-ui/components';
 import { CodeBlock } from '@/once-ui/modules';
 import { HeadingLink } from '@/components';
@@ -76,6 +77,7 @@ function createImage({ alt, src, ...props }: SmartImageProps & { src: string }) 
             aspectRatio="16 / 9"
             alt={alt}
             src={src}
+            sizes="(max-width: 768px) 100vw, 960px"
             {...props}/>
         )
 }
@@ -148,23 +150,32 @@ type ImageGridProps = {
             key={index}
             direction="column"
             alignItems="center"
+            gap="8"
             minWidth={image.width}
-            height={image.height}
             style={{
               width: `${image.width}rem`,
             }}
           >
             <SmartImage
               radius="m"
-              sizes={image.width.toString()}
+              sizes={`${image.width * 16}px`}
               alt={image.alt}
               src={image.src}
+              objectFit="contain"
               style={{
                 width: "100%",
                 height: `${image.height}rem`,
-                objectFit: "contain",
               }}
             />
+            <Text
+              as="span"
+              variant="body-default-xs"
+              onBackground="neutral-weak"
+              align="center"
+              style={{ lineHeight: "1.2", minHeight: "2.4em" }}
+            >
+              {image.alt}
+            </Text>
           </Flex>
         ))}
       </Flex>
@@ -172,30 +183,27 @@ type ImageGridProps = {
   }
 
 type CustomMDXProps = MDXRemoteProps & {
-    components?: typeof components;
+    components?: MDXComponents;
 };
 
 
-const components = {
-    p: createParagraph as any,
-    h1: createHeading(1) as any,
-    h2: createHeading(2) as any,
-    h3: createHeading(3) as any,
-    h4: createHeading(4) as any,
-    h5: createHeading(5) as any,
-    h6: createHeading(6) as any,
-    img: createImage as any,
-    a: CustomLink as any,
+const components: MDXComponents = {
+    p: createParagraph,
+    h1: createHeading(1),
+    h2: createHeading(2),
+    h3: createHeading(3),
+    h4: createHeading(4),
+    h5: createHeading(5),
+    h6: createHeading(6),
+    img: createImage,
+    a: CustomLink,
     Table,
     CodeBlock,
     ImageGrid,
-     // Ajout du nouveau composant
 };
 
 export function CustomMDX(props: CustomMDXProps) {
-    
     return (
-        // @ts-ignore: Suppressing type error for MDXRemote usage
         <MDXRemote
             {...props}
             components={{ ...components, ...(props.components || {}) }}

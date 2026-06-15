@@ -1,7 +1,7 @@
 "use client";
 
-import { AvatarGroup, Flex, Heading, RevealFx, SmartImage, SmartLink, Text } from "@/once-ui/components";
-import { useEffect, useState } from "react";
+import { AvatarGroup, Flex, Heading, SmartImage, SmartLink, Text } from "@/once-ui/components";
+import { useState } from "react";
 
 interface ProjectCardProps {
     slug: string;
@@ -11,6 +11,7 @@ interface ProjectCardProps {
     content: string;
     description: string;
     avatars: { src: string }[];
+    priority?: boolean;
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -20,22 +21,13 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
     title,
     content,
     description,
-    avatars
+    avatars,
+    priority = false
 }) => {
     const [activeIndex, setActiveIndex] = useState(0);
-    const [isTransitioning, setIsTransitioning] = useState(false);
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setIsTransitioning(true);
-        }, 1000);
-
-        return () => clearTimeout(timer);
-    }, []);
 
     const handleImageClick = () => {
         if(images.length > 1) {
-            setIsTransitioning(false);
             const nextIndex = (activeIndex + 1) % images.length;
             handleControlClick(nextIndex);
 
@@ -44,11 +36,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
 
     const handleControlClick = (index: number) => {
         if (index !== activeIndex) {
-            setIsTransitioning(false);
-            setTimeout(() => {
-                setActiveIndex(index);
-                setIsTransitioning(true);
-            }, 630);
+            setActiveIndex(index);
         }
     };
 
@@ -56,25 +44,22 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         <Flex
             fillWidth gap="m"
             direction="column">
-            {images[activeIndex] && <Flex onClick={handleImageClick}>
-                <RevealFx
-                    style={{width: '100%'}}
-                    delay={0.4}
-                    trigger={isTransitioning}
-                    speed="fast">
-                    <SmartImage
-                        tabIndex={0}
-                        radius="l"
-                        alt={title}
-                        aspectRatio="16 / 9"
-                        src={images[activeIndex]}
-                        style={{
-                            border: '1px solid var(--neutral-alpha-weak)',
-                            ...(images.length > 1 && {
-                                cursor: 'pointer',
-                            }),
-                        }}/>
-                </RevealFx>
+            {images[activeIndex] && <Flex fillWidth onClick={handleImageClick}>
+                <SmartImage
+                    tabIndex={0}
+                    radius="l"
+                    alt={title}
+                    aspectRatio="2140 / 1364"
+                    objectFit="contain"
+                    sizes="(max-width: 768px) 100vw, 960px"
+                    loading={priority ? "eager" : "lazy"}
+                    src={images[activeIndex]}
+                    style={{
+                        border: '1px solid var(--neutral-alpha-weak)',
+                        ...(images.length > 1 && {
+                            cursor: 'pointer',
+                        }),
+                    }}/>
             </Flex>}
             {images.length > 1 && (
                 <Flex

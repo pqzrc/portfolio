@@ -33,7 +33,7 @@ export async function generateMetadata() {
 }
 
 export default function Work() {
-    let allProjects = getPosts(['src', 'app', 'work', 'projects', 'fr']);
+    const allProjects = getPosts(['src', 'app', 'work', 'projects', 'fr']);
     const person = { name: 'Rénald DESIRE' };
 
     return (

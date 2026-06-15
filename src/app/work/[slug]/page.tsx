@@ -7,9 +7,9 @@ import { formatDate } from '@/app/utils/formatDate';
 import ScrollToHash from '@/components/ScrollToHash';
 
 interface WorkParams {
-    params: {
+    params: Promise<{
         slug: string;
-    };
+    }>;
 }
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
@@ -19,14 +19,15 @@ export async function generateStaticParams(): Promise<{ slug: string }[]> {
     }));
 }
 
-export function generateMetadata({ params: { slug } }: WorkParams) {
-	let post = getPosts(['src', 'app', 'work', 'projects', 'fr']).find((post) => post.slug === slug)
+export async function generateMetadata({ params }: WorkParams) {
+	const { slug } = await params;
+	const post = getPosts(['src', 'app', 'work', 'projects', 'fr']).find((post) => post.slug === slug)
 	
 	if (!post) {
 		return
 	}
 
-	let {
+	const {
 		title,
 		publishedAt: publishedTime,
 		summary: description,
@@ -34,7 +35,7 @@ export function generateMetadata({ params: { slug } }: WorkParams) {
 		image,
 		team,
 	} = post.metadata
-	let ogImage = image
+	const ogImage = image
 		? `https://${baseURL}${image}`
 		: `https://${baseURL}/og?title=${title}`;
 
@@ -64,8 +65,9 @@ export function generateMetadata({ params: { slug } }: WorkParams) {
 	}
 }
 
-export default function Project({ params }: WorkParams) {
-	let post = getPosts(['src', 'app', 'work', 'projects', 'fr']).find((post) => post.slug === params.slug)
+export default async function Project({ params }: WorkParams) {
+	const { slug } = await params;
+	const post = getPosts(['src', 'app', 'work', 'projects', 'fr']).find((post) => post.slug === slug)
 
 	if (!post) {
 		notFound()
@@ -73,8 +75,8 @@ export default function Project({ params }: WorkParams) {
 
     const person = { name: 'Rénald DESIRE' };
 
-	const avatars = post.metadata.team?.map((person: any) => ({
-        src: person.avatar,
+	const avatars = post.metadata.team?.map((member) => ({
+        src: member.avatar,
     })) || [];
 
 	return (
@@ -121,9 +123,12 @@ export default function Project({ params }: WorkParams) {
 			</Flex>
 			{post.metadata.images.length > 0 && (
 				<SmartImage
-					aspectRatio="16 / 9"
+					aspectRatio="2140 / 1364"
+					objectFit="contain"
 					radius="m"
 					alt="image"
+					sizes="(max-width: 768px) 100vw, 960px"
+					loading="eager"
 					src={post.metadata.images[0]}/>
 			)}
 			<Flex style={{margin: 'auto'}}

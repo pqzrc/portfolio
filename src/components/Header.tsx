@@ -2,7 +2,8 @@
 
 import { usePathname } from 'next/navigation'
 
-import { Flex, ToggleButton } from "@/once-ui/components"
+import { Flex } from "@/once-ui/components/Flex"
+import { ToggleButton } from "@/once-ui/components/ToggleButton"
 import styles from '@/components/Header.module.scss'
 
 import { routes } from '@/app/resources'

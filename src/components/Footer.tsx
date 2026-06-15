@@ -1,4 +1,6 @@
-import { Flex, IconButton, SmartLink, Text } from "@/once-ui/components"
+import { Flex } from "@/once-ui/components/Flex"
+import { IconButton } from "@/once-ui/components/IconButton"
+import { Text } from "@/once-ui/components/Text"
 import styles from './Footer.module.scss'
 
 export const Footer = () => {

@@ -1,105 +1,92 @@
 ---
-title: "Administrer des systèmes d'informations communicants"
-# subtitle: "Application Python de monitoring des ressources Linux"
-publishedAt: "2024-01-17"
-summary: "Développer une application de surveillance système en réseau avec Python, sockets et logging"
-image: "/images/projects/project-03/home.png"
+title: "Administrer des systèmes informatiques communicants complexes"
+subtitle: "Oral BUT 3 - services, sécurité et exploitation"
+publishedAt: "2026-06-10"
+summary: "Préparation orale de la compétence Administrer, illustrée par Organisation et Méthode."
 ---
 
-# Administrer des systèmes d'informations communicants
+# Administrer des systèmes informatiques communicants complexes
 
-## Niveau 1 - Installer et configurer un poste de travail
+## Niveau 3 - Faire évoluer et maintenir un système communicant en conditions opérationnelles
 
-### Identifier les différents composants (matériel et logiciel) d'un système numérique
+### AC33.01 - Créer des processus de traitement automatisé
 
-**Description :** Dans le module R1.03 Introduction à l'architecture des ordinateurs, nous étudions la composition d'un ordinateur.
+**Description :** Automatiser des traitements pour rendre l'exploitation plus fiable et moins dépendante d'actions manuelles.
 
-**Ce que j'ai fait dans l'Application de Monitoring Linux :**
-- Analysé l'architecture système : CPU (cores, fréquence), RAM (utilisée/disponible), stockage (disques, partitions)
-- Identifié les composants réseau : interfaces réseau, adresses IP, bande passante, latence
-- Cartographié les processus système et leur consommation de ressources
-- Documenté l'architecture logicielle : kernel Linux, services système, bibliothèques Python
-- Créé un inventaire automatisé des composants matériels avec les informations /proc et /sys
+**Contexte et rôle :** Pendant mon stage BeepWay, j'ai travaillé sur une application Laravel en production et sur des automatisations liées aux données et aux tâches internes.
 
-**Technologies utilisées :** 
+**Ce que j'ai fait :**
+- Mise en place de commandes et traitements planifiables côté Laravel.
+- Développement de scripts de scraping Python pour collecter et exploiter des données.
+- Préparation d'automatisations IA avec OpenClaw.
 
-### Utiliser les fonctionnalités de base d'un système multitâche/multiutilisateur
+**Difficultés et solutions :**
+- Une automatisation peut produire des erreurs répétées: j'ai privilégié des traitements contrôlables et vérifiables.
+- Les données collectées doivent rester exploitables: j'ai structuré les sorties pour l'usage métier.
 
-**Description :** Tout au long de l'année j'ai travaillé sur des systèmes multi-utilisateur et multi-tâches tel que Google Drive, GitHub.
+**Technologies utilisées :** Laravel Artisan, scheduler, Python, scraping, OpenClaw.
 
-**Ce que j'ai fait dans l'Application de Monitoring Linux :**
-- Surveillé les processus système avec récupération du PID, CPU, mémoire utilisée par chaque processus
-- Géré les permissions et utilisateurs pour l'accès aux métriques système sensibles
-- Utilisé les signaux Unix pour communiquer avec les processus de monitoring
-- Configuré des tâches cron pour lancer le monitoring à intervalles réguliers
-- Implémenté la rotation des logs et la gestion de l'espace disque
+**Ce que j'en retire :** Automatiser demande de penser au déclenchement, aux erreurs, aux logs et au résultat métier attendu.
 
-**Technologies utilisées :** Google workspace, Github, 
+**Image :** /images/projects/organisation-et-methode/audit-log.png
 
-### Installer et configurer un système d'exploitation et des outils de développement
+### AC33.02 - Configurer un serveur et des services réseaux de manière avancée
 
-**Description :** Dans cette SAE nous devions créer un environnement de développement utilisant le système d'exploitation Linux.
+**Description :** Installer et configurer l'environnement nécessaire au fonctionnement d'une application web.
 
-**Ce que j'ai fait dans l'Application de Monitoring Linux :**
-- Configuré l'environnement de développement Python avec virtualenv et pip
-- Installé les dépendances système nécessaires (python3-dev, build-essential)
-- Configuré les variables d'environnement pour les paramètres de monitoring
-- Mis en place un environnement de test avec différentes distributions Linux
-- Créé des scripts d'installation automatisés pour déployer l'application
+**Contexte et rôle :** Mon expérience BeepWay inclut le montage, l'installation et la configuration de serveurs Linux pour soutenir les services internes.
 
-**Technologies utilisées :** VirtualMachine manager, pip, gestionnaires de paquets Linux (apt, yum), scripts bash d'installation
+**Ce que j'ai fait :**
+- Installation et configuration de serveurs Linux.
+- Préparation des services nécessaires à l'exécution de l'application Laravel.
+- Vérification des accès, variables d'environnement et dépendances.
 
-### Configurer un poste de travail dans un réseau d'entreprise
+**Difficultés et solutions :**
+- Un écart entre développement et production peut bloquer le service: j'ai vérifié les configurations avant mise en usage.
+- La configuration doit être compréhensible: j'ai documenté les points importants.
 
-**Description :** Dans ce module nous avons mis en place un réseau en utilisant l'application Cisco Packet Tracer.
+**Technologies utilisées :** Linux, PHP, MySQL, serveur web, variables d'environnement.
 
-**Ce que j'ai fait dans l'Application de Monitoring Linux :**
-- Configuré la communication réseau entre machines avec des sockets TCP/UDP
-- Mis en place la découverte automatique des machines du réseau local
-- Configuré les règles de firewall pour autoriser le trafic de monitoring
-- Implémenté l'authentification et le chiffrement des communications réseau
-- Testé la communication sur différents segments réseau et VLANs
+**Ce que j'en retire :** Administrer une application, c'est comprendre l'environnement complet: serveur, services, accès, configuration et supervision.
 
-**Technologies utilisées :** Cisco Packet Tracer, 
+### AC33.03 - Appliquer une politique de sécurité au niveau de l'infrastructure
 
-## Niveau 2 - Déployer des services dans une architecture
+**Description :** Protéger les services, les accès et les données dans un contexte d'entreprise.
 
-### Concevoir et développer des applications communicantes
+**Contexte et rôle :** Organisation et Méthode centralise des ressources internes, documents et rôles. La sécurité devait être intégrée dans le fonctionnement de l'application.
 
-**Description :** Créer des applications distribuées qui communiquent via des protocoles réseau.
+**Ce que j'ai fait :**
+- Gestion des rôles, permissions, tokens et droits par organisation.
+- Sécurisation des routes sensibles avec gates et policies.
+- Vérification des scénarios d'autorisation avant livraison.
 
-**Ce que j'ai fait dans l'Application de Monitoring Linux :**
-- Développé un protocole de communication custom basé sur JSON sur TCP
-- Implémenté un système client-serveur pour centraliser les métriques de plusieurs machines
-- Créé des APIs REST pour exposer les données de monitoring aux applications externes
-- Mis en place un système de heartbeat pour détecter les machines déconnectées
-- Configuré la communication bidirectionnelle pour les commandes de contrôle
+**Difficultés et solutions :**
+- Un utilisateur peut être techniquement connecté sans avoir le droit fonctionnel: j'ai séparé authentification et autorisation.
+- Les règles d'accès changent selon les modules: j'ai centralisé les contrôles.
 
-**Technologies utilisées :** Python sockets,FastAPI
+**Technologies utilisées :** Laravel, middleware, policies/gates, tokens, rôles et permissions.
 
-### Utiliser des serveurs et des services réseaux virtualisés
+**Ce que j'en retire :** La sécurité doit être pensée comme une règle d'exploitation permanente, pas comme un ajout à la fin du développement.
 
-**Description :** Déployer et gérer des services dans un environnement virtualisé ou containerisé.
+**Image :** /images/projects/organisation-et-methode/page-permissions.png
 
-**Ce que j'ai fait dans l'Application de Monitoring Linux :**
-- Containerisé l'application avec Docker pour faciliter le déploiement
-- Configuré docker-compose pour orchestrer les services (monitoring agent, collecteur central, base de données)
-- Testé le monitoring sur des machines virtuelles avec VMware et VirtualBox
-- Configuré les volumes Docker pour persister les logs et configurations
-- Implémenté la surveillance des conteneurs Docker et de leurs ressources
+### AC33.04 - Déployer et maintenir un réseau d'organisation en fonction de ses besoins
 
-**Technologies utilisées :** Docker, docker-compose, monitoring de conteneurs, volumes persistants,
+**Description :** Adapter les services techniques aux besoins réels d'une organisation.
 
-### Sécuriser les services et données d'un système
+**Contexte et rôle :** Chez BeepWay, l'application devait rester disponible pour organiser les ressources, les tâches, les documents et les activités quotidiennes.
 
-**Description :** Implémenter une stratégie de sécurité complète pour protéger l'infrastructure et les données.
+**Ce que j'ai fait :**
+- Adaptation des fonctionnalités aux besoins métier exprimés pendant le stage.
+- Amélioration continue de l'API et des modules internes.
+- Prise en compte de l'exploitation sur serveur et de la maintenance.
 
-**Ce que j'ai fait dans le ChatBot AI avec Ollama :**
-- Sécurisé les communications WebSocket avec authentification par tokens JWT
-- Implémenté l'authentification pour les APIs externes (ElevenLabs, Speech-to-Text)
-- Configuré HTTPS/WSS pour chiffrer les échanges de données audio et texte
-- Mis en place des contrôles d'accès pour limiter l'usage du LLM local Ollama
-- Anonymisé et filtré les données sensibles avant traitement par le LLM
-- Configuré des timeouts et rate limiting pour éviter les abus des services
+**Difficultés et solutions :**
+- Les besoins évoluent pendant l'usage réel: j'ai travaillé par itérations courtes.
+- La maintenance dépend de la clarté du système: j'ai documenté et structuré les modules.
 
-**Technologies utilisées :** 
+**Technologies utilisées :** Laravel, Linux, MySQL, API, documentation technique.
+
+**Ce que j'en retire :** Maintenir un système communicant demande de relier infrastructure, application et usages métier.
+
+**Image :** /images/projects/organisation-et-methode/redaction-task.png

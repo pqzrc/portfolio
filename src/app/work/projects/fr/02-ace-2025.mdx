@@ -1,0 +1,69 @@
+---
+title: "ACE 2025"
+publishedAt: "2025-03-29"
+summary: "Plateforme web pour l'Antilles Cyber Escape 2025, avec inscription, gestion d'équipes et synchronisation CTFd."
+status: "inactive"
+
+team:
+  - name: "Rénald DESIRE"
+    role: "Développeur principal"
+    avatar: "/images/avatar.JPEG"
+    linkedIn: "https://www.linkedin.com/company/once-ui/"
+
+images:
+  - "/images/projects/ace-2025/homepage.png"
+  - "/images/projects/ace-2025/admin-panel.png"
+  - "/images/projects/ace-2025/ctfd-challs.png"
+---
+
+<ImageGrid 
+  images={[
+    {
+      width: 4,
+      height: 4,
+      alt: "React",
+      src: "/images/skills/react.svg"
+    },
+    {
+      width: 4,
+      height: 4,
+      alt: "JavaScript",
+      src: "/images/skills/js.png"
+    },
+    {
+      width: 4,
+      height: 4,
+      alt: "PostgreSQL",
+      src: "/images/skills/postgresql.svg"
+    },
+    {
+      width: 4,
+      height: 4,
+      alt: "Docker",
+      src: "/images/skills/docker.png"
+    },
+    {
+      width: 4,
+      height: 4,
+      alt: "Python",
+      src: "/images/skills/python.png"
+    }
+  ]}
+/>
+
+## Présentation
+
+ACE 2025 est une plateforme web conçue pour l'Antilles Cyber Escape, un événement d'escape game cybersécurité organisé pour l'Université des Antilles.
+
+Le projet regroupe un site d'inscription et une plateforme CTFd personnalisée. Le site permet aux participants de créer leur compte, de vérifier leur adresse email, de créer ou rejoindre une équipe, de choisir un créneau et de suivre les informations liées à l'événement. Une interface administrateur permet aussi de gérer les équipes, les salles, les exports CSV et les notifications.
+
+La partie CTFd synchronise les équipes, les scores et les informations de jeu avec le site d'inscription. Elle intègre plusieurs épreuves de cybersécurité et des plugins personnalisés pour adapter l'expérience au format de l'événement.
+
+## Technologies utilisées
+
+- **Next.js**: application front-end pour les pages d'inscription, d'équipe et d'administration.
+- **Node.js / Express**: API back-end pour l'authentification, les équipes, les créneaux et l'administration.
+- **PostgreSQL**: base de données principale du site d'inscription.
+- **Redis**: cache et support technique pour certains traitements.
+- **CTFd**: plateforme de challenge cybersécurité personnalisée.
+- **Docker**: orchestration des services front-end, back-end, base de données et plateforme CTF.

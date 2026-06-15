@@ -1,13 +1,30 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Button, Flex, Heading, Text, IconButton, SmartImage, Dialog } from '@/once-ui/components'
+import { useState, useEffect, useCallback, useMemo } from 'react'
+import { Button } from '@/once-ui/components/Button'
+import { Flex } from '@/once-ui/components/Flex'
+import { Heading } from '@/once-ui/components/Heading'
+import { IconButton } from '@/once-ui/components/IconButton'
+import { SmartImage } from '@/once-ui/components/SmartImage'
+import { Text } from '@/once-ui/components/Text'
+import styles from './CompetenceSlideshow.module.scss'
+import type { CompetenceSupport } from '../competenceSupport'
 
 interface Apprentissage {
     title: string;
     description: string;
+    contexte: string;
     preuves: string[];
+    difficultes: string[];
+    retire: string;
     technologies: string;
+    images: string[];
+}
+
+interface Niveau {
+    numero: number;
+    titre: string;
+    apprentissages: Apprentissage[];
 }
 
 interface CompetenceSlideshowProps {
@@ -20,99 +37,145 @@ interface CompetenceSlideshowProps {
         };
         content: string;
     };
+    support: CompetenceSupport;
 }
 
-export default function CompetenceSlideshow({ post }: CompetenceSlideshowProps) {
-    // Extraction des apprentissages depuis le contenu MDX
-    const extractApprentissages = (content: string): { niveau1: Apprentissage[], niveau2: Apprentissage[] } => {
-        const lines = content.split('\n');
-        const apprentissages: Apprentissage[] = [];
-        let currentApprentissage: Partial<Apprentissage> | null = null;
-        let isInDescription = false;
-        let isInPreuves = false;
-        let isInTechnologies = false;
+const availableImageIndexesByFolder = {
+    ap1: [1, 2, 3, 4, 5, 6, 7, 8],
+    ap2: [1, 2],
+    ap3: [1, 2, 3, 4, 5, 6],
+    ap4: [1, 2, 3, 4, 6, 7],
+    ap5: [1, 2, 5, 6, 7],
+    ap6: [1, 2, 4, 5, 6, 7, 8],
+} as const;
 
-        for (let i = 0; i < lines.length; i++) {
-            const line = lines[i].trim();
+type ImageFolder = keyof typeof availableImageIndexesByFolder;
 
-            // Nouveau titre d'apprentissage
-            if (line.startsWith('### ') && !line.includes('Niveau')) {
-                // Sauvegarder l'apprentissage précédent s'il existe
-                if (currentApprentissage && currentApprentissage.title) {
-                    apprentissages.push(currentApprentissage as Apprentissage);
-                }
+type ParseMode = 'description' | 'contexte' | 'preuves' | 'difficultes' | 'retire' | 'technologies' | null;
 
-                // Nouveau apprentissage
-                let title = line.replace(/^###\s*/, '').trim();
-                
-                currentApprentissage = {
-                    title,
-                    description: '',
-                    preuves: [],
-                    technologies: ''
-                };
-                isInDescription = false;
-                isInPreuves = false;
-                isInTechnologies = false;
-            }
+// Découpe le contenu MDX en niveaux (## Niveau N - ...) puis en
+// apprentissages critiques (### ...) avec leurs sections **Label :**
+function extractNiveaux(content: string): Niveau[] {
+    const lines = content.split('\n');
+    const niveaux: Niveau[] = [];
+    let currentNiveau: Niveau | null = null;
+    let currentApprentissage: Apprentissage | null = null;
+    let mode: ParseMode = null;
 
-            // Description
-            if (line.startsWith('**Description :**') && currentApprentissage) {
-                isInDescription = true;
-                isInPreuves = false;
-                isInTechnologies = false;
-                currentApprentissage.description = line.replace('**Description :**', '').trim();
-            }
-
-            // Preuves et réalisations
-            if (line.startsWith('**Ce que j\'ai fait dans BlaBlaBoat :**') && currentApprentissage) {
-                isInDescription = false;
-                isInPreuves = true;
-                isInTechnologies = false;
-            }
-
-            // Technologies utilisées
-            if ((line.startsWith('**Technologies utilisées :**') || line.startsWith('**Outils utilisés :**') || line.startsWith('**Standards appliqués :**') || line.startsWith('**Pratiques appliquées :**') || line.startsWith('**Outils de test :**') || line.startsWith('**Livrables :**')) && currentApprentissage) {
-                isInDescription = false;
-                isInPreuves = false;
-                isInTechnologies = true;
-                currentApprentissage.technologies = line.replace(/\*\*[^:]+:\*\*/, '').trim();
-            }
-
-            // Contenu des sections
-            if (currentApprentissage) {
-                if (isInPreuves && line.startsWith('- ')) {
-                    currentApprentissage.preuves = currentApprentissage.preuves || [];
-                    currentApprentissage.preuves.push(line.replace('- ', ''));
-                }
-                if (isInTechnologies && !line.startsWith('**') && !line.startsWith('!') && line.length > 0) {
-                    if (!currentApprentissage.technologies) {
-                        currentApprentissage.technologies = line;
-                    }
-                }
-            }
+    const flushApprentissage = () => {
+        if (currentApprentissage && currentApprentissage.title && currentNiveau) {
+            currentNiveau.apprentissages.push(currentApprentissage);
         }
-
-        // Sauvegarder le dernier apprentissage
-        if (currentApprentissage && currentApprentissage.title) {
-            apprentissages.push(currentApprentissage as Apprentissage);
-        }
-
-        // Séparer niveau 1 et niveau 2 (les 4 premiers sont niveau 1)
-        return {
-            niveau1: apprentissages.slice(0, 4),
-            niveau2: apprentissages.slice(4)
-        };
+        currentApprentissage = null;
     };
 
-    const { niveau1, niveau2 } = extractApprentissages(post.content);
-    const [currentNiveau, setCurrentNiveau] = useState<1 | 2>(1);
+    for (const rawLine of lines) {
+        const line = rawLine.trim();
+
+        const niveauMatch = line.match(/^##\s+Niveau\s+(\d+)\s*(?:[-–—:]\s*(.*))?$/);
+        if (niveauMatch) {
+            flushApprentissage();
+            currentNiveau = {
+                numero: parseInt(niveauMatch[1], 10),
+                titre: niveauMatch[2]?.trim() || '',
+                apprentissages: [],
+            };
+            niveaux.push(currentNiveau);
+            mode = null;
+            continue;
+        }
+
+        if (line.startsWith('### ')) {
+            flushApprentissage();
+            currentApprentissage = {
+                title: line.replace(/^###\s*/, '').trim(),
+                description: '',
+                contexte: '',
+                preuves: [],
+                difficultes: [],
+                retire: '',
+                technologies: '',
+                images: [],
+            };
+            mode = null;
+            continue;
+        }
+
+        if (!currentApprentissage) continue;
+
+        if (line.startsWith('**Description :**')) {
+            mode = 'description';
+            currentApprentissage.description = line.replace('**Description :**', '').trim();
+            continue;
+        }
+        if (line.startsWith('**Contexte')) {
+            mode = 'contexte';
+            currentApprentissage.contexte = line.replace(/\*\*[^:]+:\*\*/, '').trim();
+            continue;
+        }
+        if (line.startsWith("**Ce que j'ai fait")) {
+            mode = 'preuves';
+            continue;
+        }
+        if (line.startsWith('**Difficultés')) {
+            mode = 'difficultes';
+            continue;
+        }
+        if (line.startsWith("**Ce que j'en retire :**")) {
+            mode = 'retire';
+            currentApprentissage.retire = line.replace("**Ce que j'en retire :**", '').trim();
+            continue;
+        }
+        if (line.startsWith('**Image :**')) {
+            currentApprentissage.images.push(line.replace('**Image :**', '').trim());
+            mode = null;
+            continue;
+        }
+        if (line.match(/^\*\*(Technologies utilisées|Outils utilisés|Standards appliqués|Pratiques appliquées|Outils de test|Livrables) :\*\*/)) {
+            mode = 'technologies';
+            currentApprentissage.technologies = line.replace(/\*\*[^:]+:\*\*/, '').trim();
+            continue;
+        }
+        if (line.startsWith('**')) {
+            mode = null;
+            continue;
+        }
+
+        if (line.startsWith('- ')) {
+            const item = line.replace('- ', '');
+            if (mode === 'preuves') currentApprentissage.preuves.push(item);
+            if (mode === 'difficultes') currentApprentissage.difficultes.push(item);
+            continue;
+        }
+
+        if (line.length > 0 && !line.startsWith('#') && !line.startsWith('!')) {
+            if (mode === 'description') {
+                currentApprentissage.description = (currentApprentissage.description + ' ' + line).trim();
+            } else if (mode === 'contexte') {
+                currentApprentissage.contexte = (currentApprentissage.contexte + ' ' + line).trim();
+            } else if (mode === 'retire') {
+                currentApprentissage.retire = (currentApprentissage.retire + ' ' + line).trim();
+            } else if (mode === 'technologies' && !currentApprentissage.technologies) {
+                currentApprentissage.technologies = line;
+            }
+        }
+    }
+
+    flushApprentissage();
+    return niveaux.filter((niveau) => niveau.apprentissages.length > 0);
+}
+
+export default function CompetenceSlideshow({ post, support }: CompetenceSlideshowProps) {
+    const niveaux = useMemo(() => extractNiveaux(post.content), [post.content]);
+    // Par défaut on présente le niveau le plus élevé (celui attendu en BUT3)
+    const [currentNiveauIndex, setCurrentNiveauIndex] = useState(Math.max(0, niveaux.length - 1));
     const [currentSlide, setCurrentSlide] = useState(0);
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
     const [imageZoom, setImageZoom] = useState<'fit' | 'fill' | 'actual'>('fit');
-    
+    const [selectedImagePath, setSelectedImagePath] = useState<string | null>(null);
+
     // Déterminer le dossier d'images selon la compétence
-    const getImageFolder = (title: string): string => {
+    const getImageFolder = (title: string): ImageFolder => {
         if (title.includes('Réaliser')) return 'ap1';
         if (title.includes('Optimiser')) return 'ap2';
         if (title.includes('Administrer')) return 'ap3';
@@ -121,37 +184,56 @@ export default function CompetenceSlideshow({ post }: CompetenceSlideshowProps) 
         if (title.includes('Collaborer')) return 'ap6';
         return 'ap1'; // fallback
     };
-    
+
     const imageFolder = getImageFolder(post.metadata.title);
-    const currentApprentissages = currentNiveau === 1 ? niveau1 : niveau2;
+    const currentNiveau = niveaux[currentNiveauIndex];
+    const currentApprentissages = currentNiveau?.apprentissages ?? [];
     const maxSlides = currentApprentissages.length;
-    
-    // Calculer l'index global de l'apprentissage (pour les images)
+
+    // Index global de l'apprentissage dans le fichier (pour les images)
     const getGlobalApprentissageIndex = (): number => {
-        if (currentNiveau === 1) {
-            return currentSlide + 1; // Niveau 1: apprentissages 1, 2, 3, 4...
-        } else {
-            return niveau1.length + currentSlide + 1; // Niveau 2: après les apprentissages du niveau 1
+        let index = 0;
+        for (let i = 0; i < currentNiveauIndex; i++) {
+            index += niveaux[i].apprentissages.length;
         }
+        return index + currentSlide + 1;
+    };
+
+    const getFallbackIllustrationPath = (): string => {
+        const requestedIndex = getGlobalApprentissageIndex();
+        const availableIndexes = availableImageIndexesByFolder[imageFolder];
+        const imageIndex = availableIndexes.some((index) => index === requestedIndex)
+            ? requestedIndex
+            : availableIndexes[availableIndexes.length - 1];
+
+        return `/images/comp/${imageFolder}/apprentissage-${imageIndex}.png`;
+    };
+
+    const getIllustrationPaths = (): string[] => {
+        const overrides = currentApprentissages[currentSlide]?.images ?? [];
+        return overrides.length > 0 ? overrides : [getFallbackIllustrationPath()];
+    };
+
+    const openImageModal = (imagePath: string) => {
+        setSelectedImagePath(imagePath);
+        setIsImageModalOpen(true);
     };
 
     // Navigation
-    const nextSlide = () => {
-        if (currentSlide < maxSlides - 1) {
-            setCurrentSlide(currentSlide + 1);
-        }
-    };
+    const nextSlide = useCallback(() => {
+        setCurrentSlide((slide) => (slide < maxSlides - 1 ? slide + 1 : slide));
+    }, [maxSlides]);
 
-    const prevSlide = () => {
-        if (currentSlide > 0) {
-            setCurrentSlide(currentSlide - 1);
-        }
-    };
+    const prevSlide = useCallback(() => {
+        setCurrentSlide((slide) => (slide > 0 ? slide - 1 : slide));
+    }, []);
 
-    const switchNiveau = (niveau: 1 | 2) => {
-        setCurrentNiveau(niveau);
-        setCurrentSlide(0);
-    };
+    const switchNiveau = useCallback((index: number) => {
+        if (index >= 0 && index < niveaux.length) {
+            setCurrentNiveauIndex(index);
+            setCurrentSlide(0);
+        }
+    }, [niveaux.length]);
 
     // Gestion des touches clavier
     useEffect(() => {
@@ -159,13 +241,17 @@ export default function CompetenceSlideshow({ post }: CompetenceSlideshowProps) 
             if (e.key === 'Escape') {
                 setIsImageModalOpen(false);
                 setImageZoom('fit');
+                setSelectedImagePath(null);
                 return;
             }
             if (!isImageModalOpen) {
                 if (e.key === 'ArrowRight') nextSlide();
                 if (e.key === 'ArrowLeft') prevSlide();
-                if (e.key === '1') switchNiveau(1);
-                if (e.key === '2') switchNiveau(2);
+                const digit = parseInt(e.key, 10);
+                if (!isNaN(digit)) {
+                    const index = niveaux.findIndex((niveau) => niveau.numero === digit);
+                    if (index !== -1) switchNiveau(index);
+                }
             } else {
                 // Controls dans la modal
                 if (e.key === 'f' || e.key === 'F') setImageZoom('fit');
@@ -176,9 +262,9 @@ export default function CompetenceSlideshow({ post }: CompetenceSlideshowProps) 
 
         window.addEventListener('keydown', handleKeyPress);
         return () => window.removeEventListener('keydown', handleKeyPress);
-    }, [currentSlide, maxSlides, isImageModalOpen]);
+    }, [isImageModalOpen, nextSlide, niveaux, prevSlide, switchNiveau]);
 
-    if (maxSlides === 0) {
+    if (niveaux.length === 0 || maxSlides === 0) {
         return (
             <Flex direction="column" alignItems="center" gap="l" fillWidth maxWidth="m">
                 <Button href="/competences" variant="tertiary" size="s" prefixIcon="chevronLeft">
@@ -190,29 +276,31 @@ export default function CompetenceSlideshow({ post }: CompetenceSlideshowProps) 
     }
 
     const currentApprentissage = currentApprentissages[currentSlide];
+    const illustrationPaths = getIllustrationPaths();
 
     return (
-        <Flex 
-            fillWidth 
-            direction="column" 
+        <Flex
+            fillWidth
+            direction="column"
             background="neutral-weak"
             style={{ overflow: 'hidden', minHeight: '100vh' }}>
-            
+
             {/* Header style PowerPoint */}
-            <Flex 
-                fillWidth 
-                padding="m" 
-                justifyContent="space-between" 
+            <Flex
+                className={styles.topBar}
+                fillWidth
+                padding="m"
+                justifyContent="space-between"
                 alignItems="center"
                 background="surface"
                 border="neutral-medium"
                 borderStyle="solid-1">
-                
+
                 <Button href="/competences" variant="tertiary" size="s" prefixIcon="chevronLeft">
                     Compétences
                 </Button>
-                
-                <Flex direction="column" alignItems="center" gap="xs">
+
+                <Flex className={styles.topTitle} direction="column" alignItems="center" gap="xs">
                     <Heading variant="heading-strong-l">
                         {post.metadata.title}
                     </Heading>
@@ -221,13 +309,8 @@ export default function CompetenceSlideshow({ post }: CompetenceSlideshowProps) 
                             {post.metadata.subtitle}
                         </Text>
                     )}
-                    {post.metadata.summary && (
-                        <Text variant="body-default-s" onBackground="neutral-weak" align="center">
-                            {post.metadata.summary}
-                        </Text>
-                    )}
                 </Flex>
-                
+
                 <Flex gap="s" alignItems="center">
                     <Text variant="body-default-s" onBackground="neutral-weak">
                         {currentSlide + 1} / {maxSlides}
@@ -236,49 +319,128 @@ export default function CompetenceSlideshow({ post }: CompetenceSlideshowProps) 
             </Flex>
 
             {/* Navigation Niveau */}
-            <Flex 
-                fillWidth 
-                padding="m" 
-                justifyContent="center" 
+            <Flex
+                fillWidth
+                padding="m"
+                direction="column"
+                alignItems="center"
                 gap="s"
                 background="surface">
-                
-                <Button 
-                    variant={currentNiveau === 1 ? "primary" : "secondary"}
-                    size="m"
-                    onClick={() => switchNiveau(1)}>
-                    Niveau 1
-                </Button>
-                
-                <Button 
-                    variant={currentNiveau === 2 ? "primary" : "secondary"}
-                    size="m"
-                    onClick={() => switchNiveau(2)}>
-                    Niveau 2
-                </Button>
+                <Flex
+                    className={styles.supportCard}
+                    fillWidth
+                    maxWidth="xl"
+                    direction="row"
+                    gap="l"
+                    wrap
+                    padding="l"
+                    radius="l"
+                    background="neutral-weak">
+                    <Flex className={styles.supportMedia} flex={1}>
+                        <SmartImage
+                            src={support.project.image}
+                            alt={support.project.title}
+                            aspectRatio="16 / 9"
+                            objectFit="contain"
+                            radius="m"
+                            sizes="(max-width: 768px) 100vw, 480px"
+                            loading="eager"
+                            style={{
+                                width: '100%',
+                                backgroundColor: '#050505',
+                                border: '1px solid var(--neutral-alpha-weak)',
+                            }}
+                        />
+                    </Flex>
+                    <Flex className={styles.supportContent} flex={1} direction="column" gap="m">
+                        <Flex direction="column" gap="xs">
+                            <Text variant="label-default-s" onBackground="brand-strong">
+                                Projet support principal
+                            </Text>
+                            <Heading variant="heading-strong-l">
+                                {support.project.title}
+                            </Heading>
+                            <Text variant="body-default-m" onBackground="neutral-weak">
+                                {support.project.summary}
+                            </Text>
+                            <Text variant="body-default-s">
+                                {support.project.role}
+                            </Text>
+                        </Flex>
+                        <Flex direction="column" gap="xs">
+                            <Text variant="label-default-s" onBackground="brand-strong">
+                                Stack
+                            </Text>
+                            <Text variant="body-default-s" onBackground="neutral-medium">
+                                {support.project.stack.join(' • ')}
+                            </Text>
+                        </Flex>
+                        <Flex direction="column" gap="xs">
+                            <Text variant="label-default-s" onBackground="brand-strong">
+                                Points d&apos;appui
+                            </Text>
+                            {support.project.proofs.map((proof) => (
+                                <Text key={proof} variant="body-default-s" onBackground="neutral-medium">
+                                    • {proof}
+                                </Text>
+                            ))}
+                        </Flex>
+                        <Flex gap="s" wrap>
+                            {support.project.href && (
+                                <Button href={support.project.href} variant="secondary" size="s">
+                                    Voir le projet support
+                                </Button>
+                            )}
+                            {support.secondaryProjects.map((project) => (
+                                <Button key={project.href} href={project.href} variant="tertiary" size="s">
+                                    {project.label}
+                                </Button>
+                            ))}
+                        </Flex>
+                    </Flex>
+                </Flex>
+
+                <Flex gap="s" justifyContent="center">
+                    {niveaux.map((niveau, index) => (
+                        <Button
+                            key={niveau.numero}
+                            variant={currentNiveauIndex === index ? "primary" : "secondary"}
+                            size="m"
+                            onClick={() => switchNiveau(index)}>
+                            Niveau {niveau.numero}
+                        </Button>
+                    ))}
+                </Flex>
+                {currentNiveau.titre && (
+                    <Text variant="body-default-m" onBackground="neutral-weak" align="center">
+                        {currentNiveau.titre}
+                    </Text>
+                )}
             </Flex>
 
             {/* Slide principal */}
-            <Flex 
-                fillWidth 
-                flex={1} 
-                padding="xl" 
+            <Flex
+                className={styles.slideShell}
+                fillWidth
+                flex={1}
+                padding="xl"
                 justifyContent="center">
-                
-                <Flex 
-                    fillWidth 
-                    maxWidth="xl" 
-                    direction="column" 
-                    gap="xl"
+
+                <Flex
+                    className={styles.slideCard}
+                    fillWidth
+                    maxWidth="xl"
+                    direction="column"
+                    gap="l"
                     background="surface"
                     padding="xl"
                     radius="l"
                     border="neutral-medium"
                     borderStyle="solid-1">
-                    
+
                     {/* Titre de l'apprentissage */}
                     <Flex direction="column" alignItems="center" gap="m">
-                        <Heading variant="display-strong-l" align="center">
+                        <Heading className={styles.slideHeading} variant="display-strong-s" align="center">
                             {currentApprentissage.title}
                         </Heading>
                         {currentApprentissage.description && (
@@ -288,14 +450,31 @@ export default function CompetenceSlideshow({ post }: CompetenceSlideshowProps) 
                         )}
                     </Flex>
 
+                    {/* Contexte et rôle */}
+                    {currentApprentissage.contexte && (
+                        <Flex
+                            direction="column"
+                            gap="xs"
+                            padding="m"
+                            radius="m"
+                            background="neutral-weak">
+                            <Heading variant="heading-strong-s" onBackground="brand-strong">
+                                Contexte et rôle
+                            </Heading>
+                            <Text variant="body-default-m">
+                                {currentApprentissage.contexte}
+                            </Text>
+                        </Flex>
+                    )}
+
                     {/* Contenu principal en 2 colonnes */}
-                    <Flex direction="row" gap="xl" wrap fillWidth>
-                        
+                    <Flex className={styles.slideGrid} direction="row" gap="xl" wrap fillWidth>
+
                         {/* Preuves et réalisations */}
-                        {currentApprentissage.preuves && currentApprentissage.preuves.length > 0 && (
-                            <Flex direction="column" gap="m" flex={1} style={{ minWidth: '300px' }}>
+                        {currentApprentissage.preuves.length > 0 && (
+                            <Flex className={styles.slideColumn} direction="column" gap="m" flex={1}>
                                 <Heading variant="heading-strong-m" onBackground="accent-strong">
-                                    🎯 Ce que j'ai réalisé
+                                    Ce que j'ai réalisé
                                 </Heading>
                                 <Flex direction="column" gap="s">
                                     {currentApprentissage.preuves.map((preuve, index) => (
@@ -307,46 +486,93 @@ export default function CompetenceSlideshow({ post }: CompetenceSlideshowProps) 
                             </Flex>
                         )}
 
-                        {/* Technologies */}
-                        {currentApprentissage.technologies && (
-                            <Flex direction="column" gap="m" flex={1} style={{ minWidth: '300px' }}>
-                                <Heading variant="heading-strong-m" onBackground="warning-strong">
-                                    🛠️ Technologies / Outils
+                        {/* Difficultés et solutions */}
+                        {currentApprentissage.difficultes.length > 0 && (
+                            <Flex className={styles.slideColumn} direction="column" gap="m" flex={1}>
+                                <Heading variant="heading-strong-m" onBackground="danger-strong">
+                                    Difficultés et solutions
                                 </Heading>
-                                <Text variant="body-default-m" onBackground="brand-strong">
-                                    {currentApprentissage.technologies}
-                                </Text>
+                                <Flex direction="column" gap="s">
+                                    {currentApprentissage.difficultes.map((difficulte, index) => (
+                                        <Text key={index} variant="body-default-m">
+                                            • {difficulte}
+                                        </Text>
+                                    ))}
+                                </Flex>
                             </Flex>
                         )}
                     </Flex>
 
-                    {/* Image d'illustration */}
-                    <Flex justifyContent="center" gap="m">
-                        <SmartImage
-                            src={`/images/comp/${imageFolder}/apprentissage-${getGlobalApprentissageIndex()}.png`}
-                            alt={`Illustration pour ${currentApprentissage.title}`}
-                            aspectRatio="16 / 9"
+                    {/* Technologies */}
+                    {currentApprentissage.technologies && (
+                        <Flex direction="column" gap="xs">
+                            <Heading variant="heading-strong-s" onBackground="warning-strong">
+                                Technologies / Outils
+                            </Heading>
+                            <Text variant="body-default-m" onBackground="brand-strong">
+                                {currentApprentissage.technologies}
+                            </Text>
+                        </Flex>
+                    )}
+
+                    {/* Ce que j'en retire */}
+                    {currentApprentissage.retire && (
+                        <Flex
+                            direction="column"
+                            gap="xs"
+                            padding="m"
                             radius="m"
-                            style={{
-                                maxWidth: '600px',
-                                cursor: 'pointer',
-                                backgroundColor: '#f0f0f0',
-                                border: '2px dashed #ccc',
-                            }}
-                            onClick={() => setIsImageModalOpen(true)}
-                        />
+                            border="brand-medium"
+                            borderStyle="solid-1">
+                            <Heading variant="heading-strong-s" onBackground="brand-strong">
+                                Ce que j'en retire
+                            </Heading>
+                            <Text variant="body-default-m">
+                                {currentApprentissage.retire}
+                            </Text>
+                        </Flex>
+                    )}
+
+                    <Flex
+                        fillWidth
+                        gap="m"
+                        wrap
+                        justifyContent="center">
+                        {illustrationPaths.map((imagePath, index) => (
+                            <Flex
+                                key={imagePath}
+                                className={styles.imageCard}
+                                onClick={() => openImageModal(imagePath)}
+                            >
+                                <SmartImage
+                                    src={imagePath}
+                                    alt={`Illustration ${index + 1} pour ${currentApprentissage.title}`}
+                                    aspectRatio="16 / 9"
+                                    objectFit="contain"
+                                    radius="m"
+                                    sizes="(max-width: 768px) 100vw, 480px"
+                                    loading="eager"
+                                    style={{
+                                        width: '100%',
+                                        backgroundColor: '#ffffff',
+                                        border: '1px solid var(--neutral-alpha-weak)',
+                                        cursor: 'pointer',
+                                    }}
+                                />
+                            </Flex>
+                        ))}
                     </Flex>
                 </Flex>
             </Flex>
 
             {/* Navigation arrows */}
-            <Flex 
-                fillWidth 
-                padding="m" 
-                justifyContent="space-between" 
+            <Flex
+                fillWidth
+                padding="m"
+                justifyContent="space-between"
                 alignItems="center"
                 background="surface">
-                
+
                 <IconButton
                     icon="chevronLeft"
                     size="l"
@@ -354,7 +580,7 @@ export default function CompetenceSlideshow({ post }: CompetenceSlideshowProps) 
                     disabled={currentSlide === 0}
                     onClick={prevSlide}
                 />
-                
+
                 <Flex gap="xs" alignItems="center">
                     {/* Indicateurs de slides */}
                     {currentApprentissages.map((_, index) => (
@@ -369,7 +595,7 @@ export default function CompetenceSlideshow({ post }: CompetenceSlideshowProps) 
                         />
                     ))}
                 </Flex>
-                
+
                 <IconButton
                     icon="chevronRight"
                     size="l"
@@ -399,8 +625,9 @@ export default function CompetenceSlideshow({ post }: CompetenceSlideshowProps) 
                     }}
                     onClick={() => setIsImageModalOpen(false)}
                 >
+                    {/* eslint-disable-next-line @next/next/no-img-element -- Native image keeps the full-screen actual-size zoom mode. */}
                     <img
-                        src={`/images/comp/${imageFolder}/apprentissage-${getGlobalApprentissageIndex()}.png`}
+                        src={selectedImagePath ?? illustrationPaths[0]}
                         alt={`Illustration pour ${currentApprentissage.title}`}
                         style={{
                             maxWidth: imageZoom === 'actual' ? 'none' : '95vw',
@@ -413,7 +640,7 @@ export default function CompetenceSlideshow({ post }: CompetenceSlideshowProps) 
                         }}
                         onClick={(e) => e.stopPropagation()}
                     />
-                    
+
                     {/* Bouton fermer */}
                     <div
                         style={{
@@ -438,7 +665,7 @@ export default function CompetenceSlideshow({ post }: CompetenceSlideshowProps) 
                     >
                         ×
                     </div>
-                    
+
                     {/* Controls de zoom */}
                     <div
                         style={{
@@ -496,7 +723,7 @@ export default function CompetenceSlideshow({ post }: CompetenceSlideshowProps) 
                             Taille réelle (A)
                         </button>
                     </div>
-                    
+
                     {/* Instructions */}
                     <div
                         style={{
@@ -519,14 +746,14 @@ export default function CompetenceSlideshow({ post }: CompetenceSlideshowProps) 
             )}
 
             {/* Instructions de navigation */}
-            <Flex 
-                padding="s" 
-                justifyContent="center" 
+            <Flex
+                padding="s"
+                justifyContent="center"
                 background="neutral-weak">
                 <Text variant="body-default-xs" onBackground="neutral-weak">
-                    Navigation : ← → pour les apprentissages • 1/2 pour changer de niveau • Echap pour fermer
+                    Navigation : ← → pour les apprentissages • {niveaux.map((niveau) => niveau.numero).join('/')} pour changer de niveau • Echap pour fermer
                 </Text>
             </Flex>
         </Flex>
     );
-} 
+}

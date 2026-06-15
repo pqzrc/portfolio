@@ -1,104 +1,115 @@
 ---
-title: "Gérer les données de l'information"
-subtitle: "Application de gestion de prêt étudiant"
-publishedAt: "2024-01-18"
-summary: "Concevoir et développer une base de données complète pour gérer les prêts d'objets avec PHP, MySQL, Vue.js et TailwindCSS"
-image: "/images/projects/project-04/home.png"
+title: "Gérer des données de l'information"
+subtitle: "Oral BUT 3 - données, sécurité et restitution"
+publishedAt: "2026-06-10"
+summary: "Préparation orale de la compétence Gérer, illustrée par Organisation et Méthode et KovaaK's AI Personal Trainer."
 ---
 
-# Gérer les données de l'information
-
-## Niveau 1 - Concevoir et mettre en place une base de données à partir d'un cahier des charges client
-
-### Mettre à jour et interroger une base de données relationnelle
-
-**Description :** Dans la SAE 1.04 nous avons configuré, créé et manipulé une base de données.
-
-**Ce que j'ai fait dans l'Application de Prêt Étudiant :**
-- Créé des requêtes SQL complexes pour extraire les statistiques de prêts (taux de retour, objets populaires, étudiants actifs)
-- Implémenté des jointures multiples entre les tables étudiants, objets, prêts et retours
-- Utilisé des sous-requêtes pour calculer les prêts en retard et les pénalités
-- Créé des vues pour simplifier l'accès aux données fréquemment consultées
-- Optimisé les requêtes avec des index sur les colonnes les plus utilisées
-
-**Technologies utilisées :** MySQL, requêtes SQL avancées, jointures complexes, sous-requêtes, vues et index
-
-### Visualiser des données
-
-**Description :** Dans la SAE 1.04 nous avons configuré, créé et manipulé une base de données.
-
-**Ce que j'ai fait dans l'Application de Prêt Étudiant :**
-- Développé des graphiques avec Chart.js pour visualiser les statistiques de prêts par mois
-- Créé un tableau de bord administrateur avec métriques en temps réel (prêts actifs, retards, disponibilité)
-- Implémenté des filtres dynamiques pour explorer les données par étudiant, objet ou période
-- Conçu des rapports visuels pour identifier les tendances d'utilisation des objets
-- Créé des exports PDF avec graphiques pour les rapports mensuels
-
-**Technologies utilisées :** Google sheets, 
-
-### Concevoir une base de données relationnelle à partir d'un cahier des charges
-
-**Description :** Dans la SAÉ1.04 Création d'une base de données, nous avons conçu une base de données en fonction d'un cahier des charges.
-
-**Ce que j'ai fait dans l'Application de Prêt Étudiant :**
-- Analysé le cahier des charges : gestion des étudiants, objets empruntables, prêts et retours
-- Créé le modèle conceptuel avec diagramme entité-relation (Étudiant, Objet, Prêt, Catégorie)
-- Normalisé la base jusqu'à la 3ème forme normale pour éviter la redondance
-- Défini les contraintes d'intégrité : clés primaires, étrangères, contraintes de check
-- Implémenté le schéma physique avec optimisation des types de données (DATE, DECIMAL, ENUM)
-
-**Technologies utilisées :** Modélisation conceptuelle, MySQL, normalisation de base de données, contraintes d'intégrité
+# Gérer des données de l'information
 
 ## Niveau 2 - Optimiser une base de données, interagir avec une application et mettre en œuvre la sécurité
 
-### Optimiser les modèles de données de l'entreprise
+### AC24.01 - Optimiser les modèles de données de l'entreprise
 
-**Description :** Améliorer les performances et l'efficacité des bases de données existantes.
+**Description :** Structurer les données pour représenter correctement les processus métier et faciliter leur exploitation.
 
-**Ce que j'ai fait dans l'Application de Prêt Étudiant :**
-- Analysé les performances avec EXPLAIN pour identifier les requêtes lentes
-- Créé des index composites sur (etudiant_id, date_pret) pour optimiser les recherches
-- Implémenté une table de cache pour les statistiques fréquemment consultées
-- Optimisé les requêtes de rapport en utilisant des procédures stockées
-- Ajouté une table d'historique pour archiver les anciens prêts et améliorer les performances
+**Contexte et rôle :** Organisation et Méthode repose sur une base MySQL avec organisations, utilisateurs, rôles, permissions, ressources, tâches, documents et rapports.
 
-**Technologies utilisées :** Optimisation MySQL, index composites, procédures stockées, mise en cache, archivage de données
+**Ce que j'ai fait :**
+- Modélisation et manipulation de relations Eloquent entre entités métier.
+- Adaptation de la base aux modules nécessaires à l'organisation interne.
+- Vérification des dépendances entre données avant évolution.
 
-### Assurer la confidentialité des données (intégrité et sécurité)
+**Difficultés et solutions :**
+- Les relations entre ressources, tâches et droits sont nombreuses: j'ai documenté les flux.
+- Une mauvaise modélisation complique les écrans: j'ai gardé des entités métier séparées.
 
-**Description :** Protéger les données sensibles et garantir leur intégrité et confidentialité.
+**Technologies utilisées :** MySQL, Laravel migrations, Eloquent, schéma relationnel.
 
-**Ce que j'ai fait dans l'Application de Prêt Étudiant :**
-- Chiffré les données personnelles sensibles (numéros étudiants, coordonnées)
-- Implémenté un système de rôles (administrateur, gestionnaire, étudiant) avec permissions différenciées
-- Configuré l'audit trail pour tracer toutes les modifications de prêts
-- Anonymisé les données dans l'environnement de développement
-- Mis en place des sauvegardes chiffrées automatiques avec rétention de 30 jours
+**Ce que j'en retire :** Une base de données métier doit traduire l'organisation réelle sans devenir impossible à maintenir.
 
-**Technologies utilisées :** 
+**Image :** /images/projects/organisation-et-methode/page-edit-rapport.png
 
-### Organiser la restitution des données à travers la programmation et la visualisation
+### AC24.02 - Assurer la confidentialité des données
 
-**Description :** Créer des interfaces et APIs pour exposer les données de manière structurée et sécurisée.
+**Description :** Protéger les données par des règles d'accès cohérentes avec les responsabilités des utilisateurs.
 
-**Ce que j'ai fait dans l'Application de Prêt Étudiant :**
-- Développé une API REST avec PHP pour exposer les données aux applications clientes
-- Créé des endpoints sécurisés pour les différents rôles utilisateur
-- Implémenté un système d'export en CSV et Excel pour les gestionnaires
-- Conçu des tableaux de bord interactifs avec Vue.js et TailwindCSS
-- Mis en place des notifications automatiques par email pour les rappels de retour
+**Contexte et rôle :** Les documents, ressources et rapports de BeepWay ne devaient pas être visibles par tous les profils.
 
-**Technologies utilisées :** API REST en PHP, authentification par tokens, Vue.js, 
-### Manipuler des données hétérogènes
+**Ce que j'ai fait :**
+- Mise en place de rôles, permissions et contrôles par route.
+- Vérification des accès selon l'utilisateur, son organisation et ses droits.
+- Tests sur les scénarios où l'accès doit être refusé.
 
-**Description :** Intégrer et traiter des données provenant de sources multiples et de formats différents.
+**Difficultés et solutions :**
+- Une action peut être valide techniquement mais interdite métier: j'ai vérifié les deux niveaux.
+- Les règles changent selon les modules: j'ai centralisé la logique d'autorisation.
 
-**Ce que j'ai fait dans le ChatBot AI avec Ollama :**
-- Traité des flux audio en temps réel pour la reconnaissance vocale (Speech-to-Text API)
-- Converti les données audio en texte puis en prompts pour le LLM Ollama
-- Intégré les réponses textuelles du LLM avec l'API ElevenLabs pour la synthèse vocale
-- Géré les formats de données multiples : audio (WAV, MP3), texte (UTF-8), JSON (APIs)
-- Synchronisé les flux de données asynchrones entre WebSockets, LLM local et APIs externes
-- Optimisé les conversions de formats pour minimiser la latence du chatbot
+**Technologies utilisées :** Laravel, policies/gates, middleware, MySQL.
 
-**Technologies utilisées :** Audio processing, Speech-to-Text API, LLM Ollama, ElevenLabs TTS, WebSockets, format conversion 
+**Ce que j'en retire :** Gérer la donnée, c'est aussi gérer qui peut la voir, la modifier et l'exploiter.
+
+**Image :** /images/projects/organisation-et-methode/page-permissions.png
+
+### AC24.03 - Organiser la restitution de données à travers la programmation et la visualisation
+
+**Description :** Transformer les données stockées en informations utiles pour l'utilisateur ou le pilotage.
+
+**Contexte et rôle :** Organisation et Méthode devait restituer les informations dans des listes, fiches, exports, rapports et réponses API.
+
+**Ce que j'ai fait :**
+- Création et adaptation de tableaux de suivi pour tâches, ressources et documents.
+- Mise en forme de rapports et exports.
+- Structuration de réponses API lisibles par les vues.
+
+**Difficultés et solutions :**
+- Trop de données nuit à la lecture: j'ai organisé les écrans autour des informations utiles.
+- Les restitutions doivent rester fiables: j'ai conservé les règles de filtrage et d'accès.
+
+**Technologies utilisées :** Laravel, Blade, API, MySQL, exports PDF.
+
+**Ce que j'en retire :** La restitution est une étape de conception: une donnée utile doit être visible au bon endroit, sous une forme compréhensible.
+
+**Image :** /images/projects/organisation-et-methode/redaction-task.png
+
+### AC24.04 - Manipuler des données hétérogènes
+
+**Description :** Exploiter des données venant de sources ou formats différents.
+
+**Contexte et rôle :** Mon stage BeepWay comprenait aussi des scripts de scraping Python en complément des données internes de l'application.
+
+**Ce que j'ai fait :**
+- Collecte de données externes par scraping.
+- Préparation des données pour qu'elles puissent être exploitées par l'entreprise.
+- Mise en relation avec les besoins de l'application métier.
+
+**Difficultés et solutions :**
+- Les données externes sont moins régulières: j'ai prévu des contrôles et nettoyages.
+- Les résultats doivent servir un usage concret: j'ai conservé les champs utiles au besoin métier.
+
+**Technologies utilisées :** Python, scraping, MySQL, Laravel.
+
+**Ce que j'en retire :** Manipuler des données hétérogènes demande de contrôler la qualité, l'origine et l'utilité des informations.
+
+**Image :** /images/projects/organisation-et-methode/audit-log.png
+
+### Illustration complémentaire - KovaaK's AI Personal Trainer
+
+**Description :** KovaaK's AI Personal Trainer complète la compétence Gérer avec des données de statistiques, profils, leaderboards, conversations et exercices.
+
+**Contexte et rôle :** Le projet doit récupérer des données KovaaK's, les stocker, les mettre en cache et les exploiter pour fournir des recommandations d'entraînement.
+
+**Ce que j'ai fait :**
+- Préparation d'une base PostgreSQL pour les conversations, exercices et statistiques.
+- Ajout d'un cache Redis pour versionner les réponses et limiter les appels externes.
+- Organisation des services backend pour séparer données KovaaK's, LLM et recommandations.
+
+**Difficultés et solutions :**
+- Les données viennent de sources différentes: j'ai prévu une séparation entre proxy, API métier, stockage et cache.
+- Les recommandations doivent rester traçables: les données utiles sont centralisées avant d'être utilisées par l'IA.
+
+**Technologies utilisées :** PostgreSQL, Redis, FastAPI, Alembic, proxy Node.js, Docker.
+
+**Ce que j'en retire :** Gérer des données dans un projet IA demande de contrôler leur origine, leur stockage, leur fraîcheur et leur restitution.
+
+**Image :** /images/projects/kovaaks-ai-personal-trainer/cover.png

@@ -1,34 +1,48 @@
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import { getPosts } from '@/app/utils/utils'
 import { baseURL } from '@/app/resources'
 import CompetenceSlideshow from './CompetenceSlideshow'
+import { getCompetenceSupport } from '../competenceSupport'
 
 interface CompetenceParams {
-    params: {
+    params: Promise<{
         slug: string;
-    };
+    }>;
+}
+
+const oralCompetenceSlugs = ['01-realiser', '02-optimiser', '06-collaborer'] as const;
+
+function isOralCompetenceSlug(slug: string) {
+    return oralCompetenceSlugs.some((oralSlug) => oralSlug === slug);
 }
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
     const posts = getPosts(['src', 'app', 'competences', 'posts', 'fr']);
-    return posts.map(post => ({
-        slug: post.slug,
-    }));
+    return posts
+        .filter((post) => isOralCompetenceSlug(post.slug))
+        .map(post => ({
+            slug: post.slug,
+        }));
 }
 
-export function generateMetadata({ params: { slug } }: CompetenceParams) {
-	let post = getPosts(['src', 'app', 'competences', 'posts', 'fr']).find((post) => post.slug === slug)
+export async function generateMetadata({ params }: CompetenceParams) {
+	const { slug } = await params;
+    if (!isOralCompetenceSlug(slug)) {
+        return
+    }
+
+	const post = getPosts(['src', 'app', 'competences', 'posts', 'fr']).find((post) => post.slug === slug)
 	
 	if (!post) {
 		return
 	}
 
-	let {
+	const {
 		title,
 		summary: description,
 		image,
 	} = post.metadata
-	let ogImage = image
+	const ogImage = image
 		? `https://${baseURL}${image}`
 		: `https://${baseURL}/og?title=${title}`;
 
@@ -55,12 +69,18 @@ export function generateMetadata({ params: { slug } }: CompetenceParams) {
 	}
 }
 
-export default function Competence({ params }: CompetenceParams) {
-	let post = getPosts(['src', 'app', 'competences', 'posts', 'fr']).find((post) => post.slug === params.slug)
+export default async function Competence({ params }: CompetenceParams) {
+	const { slug } = await params;
+    if (!isOralCompetenceSlug(slug)) {
+        redirect('/competences')
+    }
 
-	if (!post) {
+	const post = getPosts(['src', 'app', 'competences', 'posts', 'fr']).find((post) => post.slug === slug)
+    const support = getCompetenceSupport(slug)
+
+	if (!post || !support) {
 		notFound()
 	}
 
-	return <CompetenceSlideshow post={post} />
+	return <CompetenceSlideshow post={post} support={support} />
 }

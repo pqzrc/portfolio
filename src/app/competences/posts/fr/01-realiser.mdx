@@ -1,117 +1,96 @@
 ---
-title: "Réaliser un développement d'application"
-# subtitle: "Site web e-commerce - Boutique de vêtements"
-publishedAt: "2024-01-15"
-summary: "Concevoir, développer et déployer un site e-commerce complet avec Figma, Vue.js et TailwindCSS"
-image: "/images/projects/project-01/relax1.png"
+title: "Adapter des applications sur un ensemble de supports"
+subtitle: "Niveau 3 - compétence 1"
+publishedAt: "2026-06-10"
+summary: "Compétence de niveau 3 illustrée par The Camp, application web interactive mobile-first basée sur un parcours narratif par QR codes."
 ---
 
-# Réaliser un développement d'application
+# Adapter des applications sur un ensemble de supports
 
-## Niveau 1 - Développer des applications informatiques simples
+## Niveau 3 - Adapter des applications sur un ensemble de supports
 
-### Implémenter des conceptions simples
+### AC31.01 - Choisir et implémenter les architectures adaptées
 
-**Description :** Dans le module R2.01 Développement orienté objets nous abordons le concept des classes dans le langage de programmation Python.
+**Description :** Savoir choisir une architecture cohérente avec un besoin, puis l'implémenter de manière maintenable.
 
-**Ce que j'ai fait dans le Site E-commerce :**
-- Implémenté les composants Vue.js de base pour l'affichage des produits
-- Créé les fonctionnalités essentielles : ajout au panier, calcul du total, navigation
-- Développé les formulaires simples de contact et d'inscription newsletter
-- Codé les interactions de base avec JavaScript (hover, click, scroll)
-- Respecté les spécifications fournies pour chaque fonctionnalité
+**Contexte et rôle :** Sur The Camp, nous devions reprendre une application web interactive existante, pensée pour un usage mobile-first et structurée autour d'un parcours narratif débloqué par QR codes.
 
-**Technologies utilisées :** Python, Programmation Orientée Objet, 
+**Ce que j'ai fait :**
+- Analyse de l'architecture existante: pages HTML, styles CSS, scripts JavaScript, assets, PWA et service worker.
+- Cartographie du parcours utilisateur, des pages narratives, des énigmes, des scanners QR et des mini-jeux.
+- Proposition d'une organisation plus lisible avec des dossiers séparés par responsabilité: `pages/`, `styles/`, `scripts/`, `img/`, `audio/` et `docs/`.
+- Factorisation progressive des éléments répétés: reset CSS, transitions, fond visuel commun, logique partagée et scripts de page.
+- Maintien d'une architecture simple, adaptée au projet: application web statique, sans installation complexe, consultable depuis un navigateur mobile.
 
-### Élaborer des conceptions simples
+**Preuves visibles :**
+- `README.md` avec l'arborescence source of truth.
+- `docs/architecture-map.md` pour la cartographie technique et le flux principal.
+- `docs/refactor/phase1-audit.md` pour l'audit initial de l'existant.
+- `scripts/core/app-core.js` pour la logique commune.
+- `manifest.json` et `service-worker.js` pour l'adaptation PWA/mobile.
 
-**Description :** Concevoir l'architecture et l'interface d'applications en partant des besoins utilisateur.
+**Technologies utilisées :** HTML, CSS, JavaScript, PWA, service worker, QR codes.
 
-**Ce que j'ai fait dans le Site E-commerce :**
-- Analysé les besoins pour créer une boutique de vêtements en ligne
-- Conçu les maquettes et wireframes avec Figma pour toutes les pages principales
-- Élaboré l'arborescence du site : accueil, catalogue, fiche produit, panier
-- Défini l'expérience utilisateur et les parcours de navigation
-- Créé le design system avec couleurs, typographies et composants réutilisables
+**Ce que j'en retire :** Choisir une architecture adaptée, ce n'est pas forcément ajouter un framework: dans ce projet, le plus important était de rendre une application existante plus claire, maintenable et adaptée à son usage mobile.
 
-**Technologies utilisées :** Figma pour les maquettes, UX design,
+**Image :** /images/projects/the-camp/start-menu.png
+**Image :** /images/projects/the-camp/scanner.png
+**Image :** /images/projects/the-camp/tree.png
 
-### Faire des essais et évaluer leur résultat en regard des spécifications
+### AC31.02 - Faire évoluer une application existante
 
-**Description :** Dans le module R2.03 Qualité de développement nous avons exploré la journalisation et le débogage de code, afin de faire des tests.
+**Description :** Modifier une application déjà en place en respectant son fonctionnement, ses usages et ses contraintes.
 
-**Ce que j'ai fait dans le Site E-commerce :**
-- Testé chaque fonctionnalité individuellement contre les spécifications
-- Vérifié le processus d'achat complet de bout en bout
-- Validé la compatibilité sur différents navigateurs (Chrome, Firefox, Safari)
-- Contrôlé la conformité responsive sur mobile, tablette et desktop
-- Mesuré les performances et optimisé pour respecter les critères de rapidité
+**Contexte et rôle :** The Camp était une application existante fournie avec son code source complet. Le travail demandé consistait à analyser l'existant, proposer des évolutions, les implémenter puis les valider.
 
-**Technologies utilisées :** Tests manuels,
+**Ce que j'ai fait :**
+- Diagnostic fonctionnel du parcours joueur: progression narrative, QR codes, énigmes, mini-jeux et fin du parcours.
+- Identification des problèmes techniques et UX: duplication, code inline, lisibilité, feedback utilisateur et maintien du parcours mobile.
+- Refactorisation progressive sans casser le fonctionnement global du jeu.
+- Amélioration de la structure du code avec des fichiers CSS et JavaScript dédiés.
+- Conservation du principe de jeu existant: progression par étapes et validation via QR codes.
 
-### Développer des interfaces utilisateur
+**Preuves visibles :**
+- `docs/refactor/phase1-audit.md` pour l'analyse de l'existant.
+- `docs/refactor/phase2-architecture.md` et les phases suivantes pour les choix d'évolution.
+- `pages/` pour les pages du parcours réorganisées par lots.
+- `styles/pages/` et `scripts/pages/` pour les fichiers extraits et spécialisés.
 
-**Description :** Créer des interfaces graphiques intuitives et attractives pour les utilisateurs.
+**Difficultés et solutions :**
+- L'application contenait beaucoup de pages autonomes: j'ai privilégié une évolution progressive plutôt qu'une réécriture complète.
+- Le parcours joueur ne devait pas être cassé: les modifications ont été pensées en conservant les liens et l'ordre des étapes.
 
-**Ce que j'ai fait dans le Site E-commerce :**
-- Développé une interface responsive avec TailwindCSS
-- Créé des composants interactifs : carrousel produits, filtres dynamiques, modal
-- Implémenté des animations CSS fluides pour améliorer l'expérience utilisateur
-- Conçu une navigation intuitive avec menu hamburger et breadcrumbs
-- Optimisé l'ergonomie du processus d'achat avec un tunnel simplifié
+**Technologies utilisées :** HTML, CSS, JavaScript, structure de fichiers, refactorisation progressive.
 
-**Technologies utilisées :** TailwindCSS, CSS animations, composants Vue.js, responsive design
+**Ce que j'en retire :** Faire évoluer une application existante demande d'abord de comprendre son fonctionnement réel, puis de modifier par étapes pour éviter les régressions.
 
-## Niveau 2 - Partir des exigences et aller jusqu'à une application complète
+**Image :** /images/projects/the-camp/selection.png
 
-### Élaborer et implémenter les spécifications fonctionnelles et non fonctionnelles à partir des exigences
+### AC31.03 - Intégrer des solutions dans un environnement de production
 
-**Description :** Transformer les besoins métier en spécifications techniques détaillées et les implémenter.
+**Description :** Livrer une évolution utilisable dans un environnement réel, avec configuration, validation et contraintes d'usage.
 
-**Ce que j'ai fait dans le Site E-commerce :**
-- Analysé le cahier des charges client pour identifier toutes les exigences
-- Défini les spécifications fonctionnelles : catalogue, panier, paiement, gestion commandes
-- Établi les spécifications non-fonctionnelles : performance (moins de 3s), sécurité, disponibilité
-- Documenté l'architecture technique complète avec Vue.js et APIs
-- Implémenté toutes les fonctionnalités selon les spécifications validées
+**Contexte et rôle :** Pour cet apprentissage critique, j'utilise une preuve issue de mon stage chez BeepWay. L'objectif était d'intégrer un workflow OpenClaw dans un environnement d'entreprise réel, piloté depuis Telegram et adapté aux services internes de prospection et de suivi.
 
-**Technologies utilisées :** Analyse des besoins, documentation technique, Vue.js, architecture logicielle
+**Ce que j'ai fait :**
+- Participation à la mise en place d'un workflow multi-agents OpenClaw structuré autour d'un routeur `spa`.
+- Définition d'un pipeline commun: Telegram -> SPA -> Source -> Qui -> Warming -> Quoi -> SPA.
+- Séparation des responsabilités: `spa` orchestre et valide, tandis que `source`, `qui`, `warming` et `quoi` réalisent les analyses spécialisées.
+- Mise en place d'une adaptation métier par `spa_id` avec plusieurs profils autorisés: `CPME`, `OVEREED`, `API_TRANSIT` et `SWEETY_DAY`.
+- Utilisation de contrats JSON pour les handoffs et les résultats afin de garder des échanges contrôlés entre agents.
+- Prise en compte de règles d'exploitation: un seul agent parle à Telegram, les sous-agents ne répondent pas directement au canal, et les réponses hors contrat sont rejetées.
+- Intégration de contraintes métier réelles: vérification officielle via Sirene/datagouv, absence d'invention de données et validation humaine sur les actions commerciales.
 
-### Appliquer des principes d'accessibilité et d'ergonomie
+**Preuves visibles :**
+- `ARCHITECTURE.md` pour le pipeline Telegram, le rôle du `spa` et les règles de communication.
+- `README.md` pour l'objectif du workflow, les 5 workspaces et le principe de bus inter-agents OpenClaw.
+- `SERVICE_PROFILES.md` pour l'adaptation métier par `spa_id`.
+- `contracts/handoff.schema.json` et `contracts/result.schema.json` pour les contrats JSON obligatoires.
+- `TEST_PROMPTS.md` pour les scénarios de test Telegram et CLI.
+- `setup-openclaw-workflow.sh` pour la création des workspaces serveur.
 
-**Description :** Concevoir des interfaces utilisables par tous en respectant les standards d'accessibilité.
+**Technologies utilisées :** Linux, OpenClaw, Telegram, JSON Schema, Sirene/datagouv, Dolibarr, Laravel, MySQL, configuration serveur.
 
-**Ce que j'ai fait dans le Site E-commerce :**
-- Respecté les standards WCAG 2.1 avec contrastes de couleurs appropriés
-- Ajouté des labels explicites et aria-labels sur tous les éléments interactifs
-- Implémenté la navigation au clavier pour toutes les fonctionnalités
-- Créé des alternatives textuelles pour toutes les images et icônes
-- Testé l'accessibilité avec des lecteurs d'écran et corrigé les problèmes
+**Ce que j'en retire :** Intégrer une solution en production ne consiste pas seulement à faire fonctionner un outil sur ma machine: il faut définir un pipeline clair, contrôler les échanges entre services, prévoir les erreurs, respecter les sources de données autorisées et garder une exploitation compréhensible pour l'entreprise.
 
-**Technologies utilisées :** Design responsive, 
-
-### Adopter des bonnes pratiques de conception et de programmation
-
-**Description :** Structurer le code de manière maintenable, évolutive et conforme aux standards.
-
-**Ce que j'ai fait dans le Site E-commerce :**
-- Organisé le code en composants Vue.js réutilisables et modulaires
-- Appliqué les principes SOLID et DRY pour éviter la duplication
-- Utilisé Vuex pour la gestion d'état centralisée et prévisible
-- Commenté le code et créé une documentation technique complète
-- Mis en place un système de gestion des erreurs cohérent
-
-**Technologies utilisées :** Vue.js, composants, routes
-
-### Vérifier et valider la qualité de l'application par les tests
-
-**Description :** Mettre en place une stratégie de tests complète pour garantir la fiabilité.
-
-**Ce que j'ai fait dans le Site E-commerce :**
-- Créé des tests unitaires pour toutes les fonctions critiques avec Jest
-- Développé des tests d'intégration pour valider les parcours utilisateur complets
-- Effectué des tests de performance avec Lighthouse et optimisé le code
-- Testé la sécurité contre les attaques XSS et les injections
-- Validé l'application sur différents environnements et configurations
-
-**Technologies utilisées :** 
+**Image :** /images/projects/organisation-et-methode/openclaw-workflow.png

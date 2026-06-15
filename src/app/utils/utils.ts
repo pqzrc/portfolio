@@ -2,21 +2,30 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 
-type Team = {
+export type Team = {
     name: string;
     role: string;
     avatar: string;
     linkedIn: string;
 };
 
-type Metadata = {
+export type ProjectStatus = 'active' | 'inactive';
+
+export type Metadata = {
     title: string;
     publishedAt: string;
     summary: string;
     image?: string;
     images: string[];
     tag?: string;
+    status: ProjectStatus;
     team: Team[];
+};
+
+export type MdxPost = {
+    metadata: Metadata;
+    slug: string;
+    content: string;
 };
 
 function getMDXFiles(dir: string) {
@@ -42,13 +51,14 @@ function readMDXFile(filePath: string) {
         image: data.image || '',
         images: data.images || [],
         tag: data.tag || [],
+        status: data.status === 'inactive' ? 'inactive' : 'active',
         team: data.team || [],
     };
 
     return { metadata, content };
 }
 
-function getMDXData(dir: string) {
+function getMDXData(dir: string): MdxPost[] {
     const mdxFiles = getMDXFiles(dir);
     return mdxFiles.map((file) => {
         const { metadata, content } = readMDXFile(path.join(dir, file));
@@ -63,6 +73,10 @@ function getMDXData(dir: string) {
 }
 
 export function getPosts(customPath = ['', '', '', '']) {
-    const postsDir = path.join(process.cwd(), ...customPath);
+    const postsDir = path.join(/* turbopackIgnore: true */ process.cwd(), ...customPath);
     return getMDXData(postsDir);
+}
+
+export function getVisiblePosts(customPath = ['', '', '', '']) {
+    return getPosts(customPath).filter((post) => post.metadata.status !== 'inactive');
 }
